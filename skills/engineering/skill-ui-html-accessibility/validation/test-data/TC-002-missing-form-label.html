@@ -1,0 +1,11 @@
+<!-- Violation: Input relying solely on placeholder attribute without an explicit accessible label -->
+<form>
+  <input type="text" id="email" class="UnlabeledInputViolation" placeholder="Enter your email address" />
+</form>
+
+<!-- Safe Counterpart: Input explicitly associated with an HTML label -->
+<form>
+  <label for="user-email" class="SafeLabeledInput">Email Address</label>
+  <input type="email" id="user-email" class="SafeLabeledInput" placeholder="Enter your email address" />
+</form>
+
