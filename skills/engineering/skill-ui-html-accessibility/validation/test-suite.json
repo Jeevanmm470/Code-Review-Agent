@@ -1,0 +1,63 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-ui-html-accessibility",
+  "version": "1.0.0",
+  "description": "Validation test suite for UI HTML & Accessibility engineering skill rule detection and safe code counterpart analysis.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of non-semantic div elements used for click handlers instead of semantic buttons.",
+      "category": "semantic-html",
+      "technology": "HTML / DOM",
+      "inputFile": "validation/test-data/TC-001-div-button.html",
+      "targetSymbol": "DivButtonViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "A11Y01",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["div class=\"DivButtonViolation\""]
+          }
+        ],
+        "notes": "Component uses non-semantic <div> with click handler instead of native <button>."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeButtonSemantic",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Component uses native semantic <button> element."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of form inputs missing accessible labels.",
+      "category": "accessible-names",
+      "technology": "HTML / Forms",
+      "inputFile": "validation/test-data/TC-002-missing-form-label.html",
+      "targetSymbol": "UnlabeledInputViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "A11Y02",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["UnlabeledInputViolation"]
+          }
+        ],
+        "notes": "Form input relies on placeholder attribute without associated <label> or aria-label."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeLabeledInput",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Form input explicitly associated with <label for=\"user-email\">."
+        }
+      }
+    }
+  ]
+}
+
