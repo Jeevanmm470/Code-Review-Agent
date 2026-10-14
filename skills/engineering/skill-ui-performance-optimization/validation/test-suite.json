@@ -1,0 +1,63 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-ui-performance-optimization",
+  "version": "1.0.0",
+  "description": "Validation test suite for UI Performance Optimization engineering skill rule detection and safe code counterpart analysis.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of forced synchronous layout calculation (layout thrashing) in loops.",
+      "category": "rendering-performance",
+      "technology": "Browser Performance",
+      "inputFile": "validation/test-data/TC-001-layout-thrashing.js",
+      "targetSymbol": "LayoutThrashingViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "UIPERF01",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["elements[i].offsetWidth"]
+          }
+        ],
+        "notes": "Loop alternates reading geometry offsetWidth and mutating style width causing layout thrashing."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeBatchedLayoutExecution",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Batches geometry reads into an initial pass before applying style updates."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of dangling global event listeners missing teardown cleanup upon unmount.",
+      "category": "runtime-memory",
+      "technology": "Browser Performance",
+      "inputFile": "validation/test-data/TC-002-dangling-listener.js",
+      "targetSymbol": "DanglingListenerViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "UIPERF05",
+            "severity": "MEDIUM",
+            "confidence": "HIGH",
+            "evidenceContains": ["window.addEventListener(\"resize\", handler)"]
+          }
+        ],
+        "notes": "Attaches global window resize event listener without returning cleanup unbind routine."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeTeardownListenerCleanup",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Returns explicit cleanup closure calling removeEventListener."
+        }
+      }
+    }
+  ]
+}
+
