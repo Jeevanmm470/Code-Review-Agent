@@ -1,0 +1,63 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-ui-style-guide-core",
+  "version": "1.0.0",
+  "description": "Validation test suite for UI Style Guide Core skill rule detection and safe code counterpart analysis.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of hardcoded hex color values bypassing semantic tokens.",
+      "category": "design-tokens",
+      "technology": "CSS / Styling",
+      "inputFile": "validation/test-data/TC-001-hardcoded-hex-color.css",
+      "targetSymbol": "HardcodedHexColorViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "STYLE01",
+            "severity": "MEDIUM",
+            "confidence": "HIGH",
+            "evidenceContains": ["#3b82f6"]
+          }
+        ],
+        "notes": "Component uses raw hex color string #3b82f6 instead of semantic token var(--color-primary)."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeSemanticTokenUsage",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Component properly references semantic color tokens."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of magic pixel spacing offsets bypassing standard design scale.",
+      "category": "visual-consistency",
+      "technology": "CSS / Layout",
+      "inputFile": "validation/test-data/TC-002-magic-pixel-spacing.css",
+      "targetSymbol": "MagicPixelSpacingViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "STYLE04",
+            "severity": "LOW",
+            "confidence": "HIGH",
+            "evidenceContains": ["padding: 13px", "margin-top: 7px"]
+          }
+        ],
+        "notes": "Component uses non-standard 13px padding and 7px margin instead of design system spacing scale."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeSpacingScaleUsage",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Component uses standard spacing variables."
+        }
+      }
+    }
+  ]
+}
+

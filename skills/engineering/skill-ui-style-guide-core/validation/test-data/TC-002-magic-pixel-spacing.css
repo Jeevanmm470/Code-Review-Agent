@@ -1,0 +1,12 @@
+/* Violation: Unjustified arbitrary pixel spacing bypassing spacing scale */
+.MagicPixelSpacingViolation {
+  padding: 13px;
+  margin-top: 7px;
+}
+
+/* Safe Counterpart: Uses standard design system spacing tokens */
+.SafeSpacingScaleUsage {
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+}
+

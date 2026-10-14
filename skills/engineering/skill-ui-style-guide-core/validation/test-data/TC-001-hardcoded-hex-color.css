@@ -1,0 +1,12 @@
+/* Violation: Hardcoded hex color instead of semantic token */
+.HardcodedHexColorViolation {
+  color: #3b82f6;
+  background-color: #ffffff;
+}
+
+/* Safe Counterpart: Reuses semantic design tokens */
+.SafeSemanticTokenUsage {
+  color: var(--color-primary);
+  background-color: var(--bg-surface);
+}
+
