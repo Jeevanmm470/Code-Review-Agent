@@ -1,0 +1,144 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "java-backend-review",
+  "version": "1.0.0",
+  "description": "Validation test suite for Java Backend Code Review skill rule detection and safe code counterpart analysis.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of prototype bean directly injected into a singleton bean.",
+      "category": "modularity",
+      "technology": "Spring Framework DI",
+      "inputFile": "validation/test-data/TC-001-modularity-prototype-in-singleton.java",
+      "targetSymbol": "PrototypeInSingletonViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "JAVA-MOD-001",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["PrototypeBean", "prototypeBean"]
+          }
+        ],
+        "notes": "Singleton class receives PrototypeBean directly in constructor without ObjectProvider."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeObjectProviderPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Class uses ObjectProvider to dynamically resolve prototype bean instances."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of unmanaged stream resource leak without try-with-resources.",
+      "category": "maintainability",
+      "technology": "Java IO AutoCloseable",
+      "inputFile": "validation/test-data/TC-002-maintainability-resource-leak.java",
+      "targetSymbol": "UnmanagedStreamLeak",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "JAVA-MAINT-003",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["FileInputStream", "fis"]
+          }
+        ],
+        "notes": "FileInputStream instance is opened without try-with-resources."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeTryWithResources",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "FileInputStream is safely managed with try-with-resources statement."
+        }
+      }
+    },
+    {
+      "id": "TC-003",
+      "description": "Verify detection of synchronized block thread pinning on Java 21 Virtual Threads.",
+      "category": "performance",
+      "technology": "Java Concurrency / Loom",
+      "inputFile": "validation/test-data/TC-003-performance-blocking-virtual-threads.java",
+      "targetSymbol": "SynchronizedThreadPinning",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "JAVA-PERF-001",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["synchronized", "fetchDataUnsafe"]
+          }
+        ],
+        "notes": "Synchronized method pins virtual thread to carrier OS thread during blocking operations."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeReentrantLockPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Method uses ReentrantLock to prevent virtual thread pinning."
+        }
+      }
+    },
+    {
+      "id": "TC-004",
+      "description": "Verify detection of native SQL injection via string concatenation in JPA createNativeQuery.",
+      "category": "security",
+      "technology": "Spring Data JPA / Hibernate",
+      "inputFile": "validation/test-data/TC-004-security-jpa-native-sql-injection.java",
+      "targetSymbol": "UnsafeNativeSqlInjection",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "JAVA-SEC-004",
+            "severity": "CRITICAL",
+            "confidence": "HIGH",
+            "evidenceContains": ["createNativeQuery", "userInput"]
+          }
+        ],
+        "notes": "Native SQL query concatenates unsanitized user input into SQL string."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeParameterizedQueryPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Query uses named parameter setParameter binding."
+        }
+      }
+    },
+    {
+      "id": "TC-005",
+      "description": "Verify detection of HTTP response contract mismatch returning 200 OK with error payload.",
+      "category": "business-logic",
+      "technology": "Spring MVC REST",
+      "inputFile": "validation/test-data/TC-005-business-logic-contract-mismatch.java",
+      "targetSymbol": "Http200ErrorPayloadMismatch",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "JAVA-BIZ-001",
+            "severity": "MEDIUM",
+            "confidence": "HIGH",
+            "evidenceContains": ["ApiResponse", "success"]
+          }
+        ],
+        "notes": "Validation failure returns success=false payload rather than HTTP error status code."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeProblemDetailContract",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Validation failure returns standard ProblemDetail contract."
+        }
+      }
+    }
+  ]
+}
+
