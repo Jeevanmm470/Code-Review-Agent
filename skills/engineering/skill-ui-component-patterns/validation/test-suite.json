@@ -1,0 +1,63 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-ui-component-patterns",
+  "version": "1.0.0",
+  "description": "Validation test suite for UI Component Patterns engineering skill rule detection and safe code counterpart analysis.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of direct prop object mutation violating component contract immutability.",
+      "category": "component-contract",
+      "technology": "UI Component Architecture",
+      "inputFile": "validation/test-data/TC-001-direct-prop-mutation.js",
+      "targetSymbol": "DirectPropMutationViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "COMP01",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["props.user.name = \"Mutated Name\""]
+          }
+        ],
+        "notes": "Component directly mutates incoming props.user property instead of treating props as read-only."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeImmutablePropContract",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Component treats props as read-only and emits onUserChange callback with updated copy."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of unnecessary state mirroring causing prop desynchronization.",
+      "category": "state-ownership",
+      "technology": "UI Component Architecture",
+      "inputFile": "validation/test-data/TC-002-state-mirroring.js",
+      "targetSymbol": "StateMirroringViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "COMP03",
+            "severity": "MEDIUM",
+            "confidence": "HIGH",
+            "evidenceContains": ["let localItems = props.items"]
+          }
+        ],
+        "notes": "Component mirrors incoming props into local state without single source of truth."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeDerivedStateContract",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Derives values dynamically from props directly during rendering."
+        }
+      }
+    }
+  ]
+}
+
