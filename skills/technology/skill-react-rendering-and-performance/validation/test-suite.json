@@ -1,0 +1,144 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-react-rendering-and-performance",
+  "version": "1.0.0",
+  "description": "Validation test suite for React Rendering and Performance Technology Skill rule detection and safe counterpart patterns.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of nested component declaration inside parent render body destroying component identity and causing remounts.",
+      "category": "component-identity-and-reconciliation",
+      "technology": "React Reconciliation",
+      "inputFile": "validation/test-data/TC-001-inline-component-remount.tsx",
+      "targetSymbol": "InlineComponentRemountViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RRP02",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["function NestedProfileInput", "<NestedProfileInput />"]
+          }
+        ],
+        "notes": "Nested component function declared inside parent function body recreated on every render."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeExtractedComponentPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Child component is extracted to top-level module scope, preserving component identity."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of unmemoized object literal passed into Context Provider value triggering re-render cascades.",
+      "category": "context-and-subscriptions",
+      "technology": "React Context",
+      "inputFile": "validation/test-data/TC-002-unstable-context-provider-value.tsx",
+      "targetSymbol": "UnstableContextProviderViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RRP05",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["<AuthContext.Provider value={{ user, login }}>"]
+          }
+        ],
+        "notes": "AuthContext.Provider receives newly allocated object literal on every render of AuthProvider."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeMemoizedContextProviderPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Context value object is memoized using useMemo with [user] dependency."
+        }
+      }
+    },
+    {
+      "id": "TC-003",
+      "description": "Verify detection of CPU-heavy data transformations executed synchronously on every render without useMemo.",
+      "category": "memoization-and-computations",
+      "technology": "React Hooks & Performance",
+      "inputFile": "validation/test-data/TC-003-unmemoized-expensive-calculation.tsx",
+      "targetSymbol": "UnmemoizedExpensiveCalculationViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RRP06",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["heavyDataProcessing(items, threshold)"]
+          }
+        ],
+        "notes": "heavyDataProcessing is executed synchronously on every render including unrelated toggle state changes."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeMemoizedCalculationPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Calculation is cached with useMemo, recalculating only when items or threshold change."
+        }
+      }
+    },
+    {
+      "id": "TC-004",
+      "description": "Verify detection of React.memo optimization defeated by passing newly allocated inline callback from parent.",
+      "category": "referential-stability",
+      "technology": "React.memo & Hooks",
+      "inputFile": "validation/test-data/TC-004-broken-memo-unstable-callback.tsx",
+      "targetSymbol": "BrokenMemoUnstableCallbackViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RRP04",
+            "severity": "MEDIUM",
+            "confidence": "HIGH",
+            "evidenceContains": ["<MemoizedChildButton", "onClick={() => console.log('Action Clicked')}"]
+          }
+        ],
+        "notes": "Inline arrow function passed to React.memo child component breaks shallow prop equality on every parent render."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeStableCallbackPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Callback is wrapped in useCallback, maintaining stable reference across renders."
+        }
+      }
+    },
+    {
+      "id": "TC-005",
+      "description": "Verify detection of blocking urgent input updates with heavy non-urgent list filtering in React 18+.",
+      "category": "transitions-and-scheduling",
+      "technology": "React Concurrent Features",
+      "inputFile": "validation/test-data/TC-005-blocking-transition-search-input.tsx",
+      "targetSymbol": "BlockingTransitionSearchViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RRP08",
+            "severity": "MEDIUM",
+            "confidence": "HIGH",
+            "evidenceContains": ["setQuery(val)", "setResults(ALL_ITEMS.filter"]
+          }
+        ],
+        "notes": "Heavy array filter runs synchronously alongside urgent query state update without startTransition."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeNonBlockingTransitionPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Heavy filtering is wrapped in startTransition, keeping text input responsive."
+        }
+      }
+    }
+  ]
+}
+

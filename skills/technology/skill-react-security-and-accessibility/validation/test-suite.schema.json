@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ReactSecurityAndAccessibilityTestSuite",
+  "type": "object",
+  "required": ["suite", "version", "testCases"],
+  "properties": {
+    "suite": {
+      "type": "string",
+      "const": "skill-react-security-and-accessibility"
+    },
+    "version": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "testCases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "category", "technology", "inputFile", "targetSymbol", "expected", "safeCounterpart"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^TC-[0-9]{3}$"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "technology": {
+            "type": "string"
+          },
+          "inputFile": {
+            "type": "string"
+          },
+          "targetSymbol": {
+            "type": "string"
+          },
+          "expected": {
+            "type": "object",
+            "required": ["findingsPresent"],
+            "properties": {
+              "findingsPresent": {
+                "type": "boolean"
+              },
+              "findings": {
+                "type": "array"
+              },
+              "notes": {
+                "type": "string"
+              }
+            }
+          },
+          "safeCounterpart": {
+            "type": "object",
+            "required": ["targetSymbol", "expected"],
+            "properties": {
+              "targetSymbol": {
+                "type": "string"
+              },
+              "expected": {
+                "type": "object",
+                "required": ["findingsPresent"],
+                "properties": {
+                  "findingsPresent": {
+                    "type": "boolean"
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

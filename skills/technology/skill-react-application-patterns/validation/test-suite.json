@@ -1,0 +1,139 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-react-application-patterns",
+  "version": "1.0.0",
+  "description": "Validation test cases for React application patterns, routing, forms, error boundaries, TypeScript contracts, testing, and SSR hydration.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Controlled to uncontrolled state transition caused by undefined initial form state",
+      "category": "Forms & Validation",
+      "technology": "React",
+      "inputFile": "test-data/TC-001-controlled-uncontrolled-transition.tsx",
+      "targetSymbol": "FlawedUserProfileEditor",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RAP03",
+            "category": "Forms & Validation",
+            "description": "Input value prop initialized to undefined switches from uncontrolled to controlled state upon receiving data, triggering React runtime warnings and desynchronizing input state."
+          }
+        ],
+        "notes": "Controlled inputs must have a defined fallback string such as value={bio ?? ''} or initial state defaulting to empty string."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeUserProfileEditor",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "SafeUserProfileEditor initializes state with fallback string and guarantees non-undefined value prop at all times."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Async event handler error unhandled due to reliance on React ErrorBoundary",
+      "category": "Error Boundaries & Recovery",
+      "technology": "React",
+      "inputFile": "test-data/TC-002-async-error-boundary-limitation.tsx",
+      "targetSymbol": "FlawedSubscriptionCancelButton",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RAP06",
+            "category": "Error Boundaries & Recovery",
+            "description": "Async error thrown inside onClick event handler is not caught by standard React Error Boundaries, resulting in unhandled rejection and silent failure without user feedback."
+          }
+        ],
+        "notes": "React Error Boundaries do not catch async or event handler errors; must use local try/catch or showBoundary from react-error-boundary."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeSubscriptionCancelButton",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "SafeSubscriptionCancelButton wraps async operations in try/catch and provides accessible inline error alert."
+        }
+      }
+    },
+    {
+      "id": "TC-003",
+      "description": "Conflicting optional boolean flags allowing impossible prop state combinations",
+      "category": "TypeScript & Contracts",
+      "technology": "React / TypeScript",
+      "inputFile": "test-data/TC-003-typescript-discriminated-union-props.tsx",
+      "targetSymbol": "FlawedNotificationBanner",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RAP07",
+            "category": "TypeScript & Contracts",
+            "description": "Component props use ambiguous multiple optional boolean flags (isSuccess, isError, isWarning) allowing contradictory simultaneous states instead of a strict discriminated union."
+          }
+        ],
+        "notes": "Refactor to discriminated union variant prop with mutually exclusive fields."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeNotificationBanner",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "SafeNotificationBanner uses a strict discriminated union with variant prop ensuring compile-time type exclusivity."
+        }
+      }
+    },
+    {
+      "id": "TC-004",
+      "description": "Synchronous assertion on asynchronous UI update in React Testing Library",
+      "category": "React Testing Library",
+      "technology": "React / Testing Library",
+      "inputFile": "test-data/TC-004-rtl-missing-async-waitfor.tsx",
+      "targetSymbol": "testFlawedFeedbackSubmission",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RAP08",
+            "category": "React Testing Library",
+            "description": "Synchronous getByRole query executed immediately following asynchronous user event without waitFor or findByRole synchronization, creating flaky test failures."
+          }
+        ],
+        "notes": "Asynchronous state changes must be waited on using screen.findBy* or waitFor(() => ...)."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "testSafeFeedbackSubmission",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "testSafeFeedbackSubmission uses await screen.findByRole to synchronize async DOM appearance."
+        }
+      }
+    },
+    {
+      "id": "TC-005",
+      "description": "Immediate browser API access during render causing SSR hydration mismatch",
+      "category": "SSR & Hydration",
+      "technology": "React / Next.js",
+      "inputFile": "test-data/TC-005-ssr-hydration-mismatch.tsx",
+      "targetSymbol": "FlawedResponsiveNavbar",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RAP09",
+            "category": "SSR & Hydration",
+            "description": "Directly evaluating window.innerWidth in component render body creates divergent server vs client initial markup, triggering React hydration mismatch errors."
+          }
+        ],
+        "notes": "Client-only window properties must be queried in useEffect or styled via CSS media queries."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeResponsiveNavbar",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "SafeResponsiveNavbar ensures identical initial markup and performs window checks within useEffect post-mount."
+        }
+      }
+    }
+  ]
+}
+

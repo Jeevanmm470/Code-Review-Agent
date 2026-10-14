@@ -1,0 +1,143 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-react-data-and-state",
+  "version": "1.0.0",
+  "description": "Validation test suite for React Data and State Technology Skill rule detection and safe counterpart patterns.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of direct in-place mutation of React component state bypassing immutability guarantees.",
+      "category": "state-immutability",
+      "technology": "React State",
+      "inputFile": "validation/test-data/TC-001-state-inplace-mutation.tsx",
+      "targetSymbol": "InPlaceStateMutationViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RDS02",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["tasks.push", "setTasks(tasks)"]
+          }
+        ],
+        "notes": "State array is mutated in place using .push() before passing existing reference to setTasks."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeImmutableStatePattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "State is copied immutably using array spread syntax producing a fresh reference."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of asynchronous fetch inside useEffect lacking cancellation or race condition guards.",
+      "category": "data-fetching-and-race-conditions",
+      "technology": "React Hooks & Data Fetching",
+      "inputFile": "validation/test-data/TC-002-fetching-race-condition.tsx",
+      "targetSymbol": "AsyncRaceConditionViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RDS03",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["fetch(`/api/users/${userId}`)", "setUser(data)"]
+          }
+        ],
+        "notes": "useEffect initiates async fetch on userId change without AbortController or active flag."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeAbortControllerPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Fetch request binds to AbortController signal and cancels on effect cleanup."
+        }
+      }
+    },
+    {
+      "id": "TC-003",
+      "description": "Verify detection of incomplete query keys omitting reactive filter/sorting dependencies in server-state cache.",
+      "category": "server-state-and-caching",
+      "technology": "TanStack Query",
+      "inputFile": "validation/test-data/TC-003-cache-incomplete-query-key.tsx",
+      "targetSymbol": "IncompleteQueryKeyViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RDS05",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["queryKey: ['items']", "status=${status}&sortBy=${sortBy}"]
+          }
+        ],
+        "notes": "useQuery key uses static array omitting reactive query parameters (status, sortBy)."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeCompleteQueryKeyPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "useQuery key includes reactive parameters object { status, sortBy }."
+        }
+      }
+    },
+    {
+      "id": "TC-004",
+      "description": "Verify detection of optimistic cache update without rollback snapshot and onError recovery handler.",
+      "category": "mutations-and-optimistic-ui",
+      "technology": "TanStack Query",
+      "inputFile": "validation/test-data/TC-004-mutation-missing-rollback.tsx",
+      "targetSymbol": "MissingRollbackViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RDS07",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["setQueryData", "onSettled"]
+          }
+        ],
+        "notes": "useMutation updates cache optimistically in onMutate without snapshot return or onError rollback logic."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeOptimisticRollbackPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Previous query data is captured in onMutate context and restored in onError handler."
+        }
+      }
+    },
+    {
+      "id": "TC-005",
+      "description": "Verify detection of desynchronized pagination state where active page index is not reset upon filter change.",
+      "category": "pagination-and-filtering",
+      "technology": "React State",
+      "inputFile": "validation/test-data/TC-005-pagination-desynchronized-filter.tsx",
+      "targetSymbol": "DesynchronizedPaginationViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RDS09",
+            "severity": "MEDIUM",
+            "confidence": "HIGH",
+            "evidenceContains": ["setSearchTerm(term)", "setPage"]
+          }
+        ],
+        "notes": "handleSearchChange modifies search criteria without resetting pagination to initial page index."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeFilterPaginationResetPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "handleSearchChange resets pagination page index to 1 when search term changes."
+        }
+      }
+    }
+  ]
+}

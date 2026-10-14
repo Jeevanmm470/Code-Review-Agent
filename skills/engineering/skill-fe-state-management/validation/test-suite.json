@@ -1,0 +1,156 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "skill": "skill-fe-state-management",
+  "version": "1.0.0",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "name": "Props Copied Directly into Local useState",
+      "target_file": "validation/test-data/TC-001.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FSM01",
+          "severity": "HIGH",
+          "line_range": [5, 12]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Initial state mirroring prop never updates when parent re-renders with new user prop."
+    },
+    {
+      "id": "TC-002",
+      "name": "Redundant Derived State Synchronized via useEffect",
+      "target_file": "validation/test-data/TC-002.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FSM02",
+          "severity": "MEDIUM",
+          "line_range": [5, 12]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Storing derived total in state creates extra render cycle and 1-render UI lag."
+    },
+    {
+      "id": "TC-003",
+      "name": "Async Typeahead Race Condition Without Request Token",
+      "target_file": "validation/test-data/TC-003.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FSM03",
+          "severity": "HIGH",
+          "line_range": [7, 12]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Out-of-order search responses overwrite newer user input results."
+    },
+    {
+      "id": "TC-004",
+      "name": "Contradictory Boolean State Flags",
+      "target_file": "validation/test-data/TC-004.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FSM04",
+          "severity": "MEDIUM",
+          "line_range": [5, 18]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Independent boolean state variables allow simultaneous loading and error states."
+    },
+    {
+      "id": "TC-005",
+      "name": "Global Store Singleton in SSR Environment",
+      "target_file": "validation/test-data/TC-005.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FSM05",
+          "severity": "CRITICAL",
+          "line_range": [3, 12]
+        }
+      ],
+      "expected_score_range": [0.0, 4.0],
+      "rationale": "Global module-level store singleton shares user session state across concurrent SSR requests."
+    },
+    {
+      "id": "TC-006",
+      "name": "Optimistic Delete Without Rollback on Failure",
+      "target_file": "validation/test-data/TC-006.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FSM06",
+          "severity": "HIGH",
+          "line_range": [7, 17]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Optimistic deletion lacks state snapshot rollback when API request fails."
+    },
+    {
+      "id": "TC-007",
+      "name": "Unvalidated JSON Parse from LocalStorage",
+      "target_file": "validation/test-data/TC-007.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FSM07",
+          "severity": "MEDIUM",
+          "line_range": [8, 14]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Restoring persisted state without schema validation crashes on legacy version data."
+    },
+    {
+      "id": "TC-008",
+      "name": "Uncleaned Subscription with Stale Closure",
+      "target_file": "validation/test-data/TC-008.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FSM08",
+          "severity": "HIGH",
+          "line_range": [7, 13]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Missing unsubscribe listener causes memory leak and captures stale initial count variable."
+    },
+    {
+      "id": "TC-009",
+      "name": "In-Place Array Mutation Bypassing Change Detection",
+      "target_file": "validation/test-data/TC-009.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FSM09",
+          "severity": "HIGH",
+          "line_range": [7, 11]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Directly pushing to state array mutates original reference and prevents component re-render."
+    },
+    {
+      "id": "TC-010",
+      "name": "Disjointed State Mutation Bypassing Domain Invariants",
+      "target_file": "validation/test-data/TC-010.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FSM10",
+          "severity": "MEDIUM",
+          "line_range": [9, 13]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Mutating order state across UI helpers without centralized validation allows negative totals."
+    },
+    {
+      "id": "TC-011",
+      "name": "Compliant State Management Reference Implementation",
+      "target_file": "validation/test-data/TC-011.tsx",
+      "expected_findings": [],
+      "expected_score_range": [10.0, 10.0],
+      "rationale": "Clean implementation using useMemo, AbortController, and immutable state updates."
+    }
+  ]
+}
+

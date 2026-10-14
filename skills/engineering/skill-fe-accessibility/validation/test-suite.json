@@ -1,0 +1,156 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "skill": "skill-fe-accessibility",
+  "version": "1.0.0",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "name": "Clickable Div Button Lacking Keyboard Support and Role",
+      "target_file": "validation/test-data/TC-001.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FA11Y01",
+          "severity": "HIGH",
+          "line_range": [4, 9]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Clickable non-interactive div lacks keyboard focus, keyboard event listeners, and button role."
+    },
+    {
+      "id": "TC-002",
+      "name": "Icon-Only Button Lacking Programmatic Accessible Name",
+      "target_file": "validation/test-data/TC-002.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FA11Y02",
+          "severity": "HIGH",
+          "line_range": [4, 9]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Button containing only an SVG icon provides no text label or aria-label for screen readers."
+    },
+    {
+      "id": "TC-003",
+      "name": "Custom Tabs Lacking Arrow Key Navigation and State",
+      "target_file": "validation/test-data/TC-003.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FA11Y03",
+          "severity": "HIGH",
+          "line_range": [7, 15]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Custom tab controls omit arrow navigation keys and aria-selected state."
+    },
+    {
+      "id": "TC-004",
+      "name": "Focus Indicator Removed Completely via Inline CSS",
+      "target_file": "validation/test-data/TC-004.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FA11Y04",
+          "severity": "HIGH",
+          "line_range": [4, 9]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Disabling outline without replacement focus styling destroys keyboard visibility (WCAG 2.4.7)."
+    },
+    {
+      "id": "TC-005",
+      "name": "Expandable Accordion Fails to Sync aria-expanded",
+      "target_file": "validation/test-data/TC-005.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FA11Y05",
+          "severity": "MEDIUM",
+          "line_range": [7, 12]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Accordion toggle button omits aria-expanded and aria-controls attributes."
+    },
+    {
+      "id": "TC-006",
+      "name": "Form Validation Error Not Programmatically Linked",
+      "target_file": "validation/test-data/TC-006.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FA11Y06",
+          "severity": "HIGH",
+          "line_range": [4, 11]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Validation error text is rendered without aria-invalid or aria-describedby linkage."
+    },
+    {
+      "id": "TC-007",
+      "name": "System Status Conveyed Exclusively by Color",
+      "target_file": "validation/test-data/TC-007.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FA11Y07",
+          "severity": "HIGH",
+          "line_range": [4, 9]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Colored status dot has no accompanying visible text or accessible label (WCAG 1.4.1)."
+    },
+    {
+      "id": "TC-008",
+      "name": "Informative Chart Image Missing alt Attribute",
+      "target_file": "validation/test-data/TC-008.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FA11Y08",
+          "severity": "HIGH",
+          "line_range": [4, 9]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Informative revenue chart image lacks alt description, leaving screen readers unaware of content."
+    },
+    {
+      "id": "TC-009",
+      "name": "Dynamic Status Toast Lacking aria-live Region",
+      "target_file": "validation/test-data/TC-009.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FA11Y09",
+          "severity": "MEDIUM",
+          "line_range": [11, 15]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Asynchronous success toast message is not announced to assistive technology users."
+    },
+    {
+      "id": "TC-010",
+      "name": "Infinite Animation Lacking Reduced-Motion Preference",
+      "target_file": "validation/test-data/TC-010.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FA11Y10",
+          "severity": "MEDIUM",
+          "line_range": [4, 15]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Pulsing animation runs continuously without prefers-reduced-motion media query override."
+    },
+    {
+      "id": "TC-011",
+      "name": "Clean Baseline - Fully Accessible Semantic Modal with ARIA Roles",
+      "target_file": "validation/test-data/TC-011.tsx",
+      "expected_findings": [],
+      "expected_score_range": [10.0, 10.0],
+      "rationale": "Modal includes aria-modal, aria-labelledby, labeled close button, and hidden decorative SVGs."
+    }
+  ]
+}
+

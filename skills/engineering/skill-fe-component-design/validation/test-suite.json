@@ -1,0 +1,156 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "skill": "skill-fe-component-design",
+  "version": "1.0.0",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "name": "God Component Mixing Multiple Disparate Features",
+      "target_file": "validation/test-data/TC-001.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FCD01",
+          "severity": "HIGH",
+          "line_range": [4, 16]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Component mixes auth, tax calculation, PDF export, and social feeds in a single file."
+    },
+    {
+      "id": "TC-002",
+      "name": "Domain Calculations and Logic Embedded in Render Expression",
+      "target_file": "validation/test-data/TC-002.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FCD02",
+          "severity": "HIGH",
+          "line_range": [4, 13]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Complex tax and interest formulas are calculated directly inside inline JSX mapping."
+    },
+    {
+      "id": "TC-003",
+      "name": "Parent Direct Mutation of Child Internal State via Ref",
+      "target_file": "validation/test-data/TC-003.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FCD03",
+          "severity": "HIGH",
+          "line_range": [4, 14]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Parent directly mutates childRef.current.internalValues, breaking encapsulation."
+    },
+    {
+      "id": "TC-004",
+      "name": "Conflicting Boolean Prop Mode Flags",
+      "target_file": "validation/test-data/TC-004.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FCD04",
+          "severity": "MEDIUM",
+          "line_range": [11, 14]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Multiple boolean props (isPrimary, isSecondary, isGhost) create conflicting styling states."
+    },
+    {
+      "id": "TC-005",
+      "name": "Deep Prop Drilling Through Intermediate Layers",
+      "target_file": "validation/test-data/TC-005.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FCD05",
+          "severity": "MEDIUM",
+          "line_range": [4, 7]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Forwarding props across 4 layers without using them creates unnecessary coupling."
+    },
+    {
+      "id": "TC-006",
+      "name": "Generic UI Primitive Leaking Feature-Specific Special Cases",
+      "target_file": "validation/test-data/TC-006.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FCD06",
+          "severity": "HIGH",
+          "line_range": [4, 10]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Generic Button primitive contains hardcoded feature routing and conditional overrides."
+    },
+    {
+      "id": "TC-007",
+      "name": "Duplicated Luhn Algorithm Across Sibling Components",
+      "target_file": "validation/test-data/TC-007.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FCD07",
+          "severity": "MEDIUM",
+          "line_range": [4, 30]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Identical credit card validation logic is duplicated across multiple sibling components."
+    },
+    {
+      "id": "TC-008",
+      "name": "Bundling Unrelated Side Effects in Single useEffect Hook",
+      "target_file": "validation/test-data/TC-008.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FCD08",
+          "severity": "MEDIUM",
+          "line_range": [5, 13]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "WebSocket connection, scroll listener, and analytics are bundled into a single effect."
+    },
+    {
+      "id": "TC-009",
+      "name": "Untestable Component with Hardcoded Global Window Mutation",
+      "target_file": "validation/test-data/TC-009.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FCD09",
+          "severity": "HIGH",
+          "line_range": [4, 11]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Direct mutation of window.location prevents isolated unit testing without whole-app mocks."
+    },
+    {
+      "id": "TC-010",
+      "name": "Fragmented Domain State Mutations by Sibling Components",
+      "target_file": "validation/test-data/TC-010.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FCD10",
+          "severity": "HIGH",
+          "line_range": [2, 12]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Uncoordinated direct mutation of global domain variable without an owning component."
+    },
+    {
+      "id": "TC-011",
+      "name": "Clean Baseline - Cohesive Component with Composition and Clean Props",
+      "target_file": "validation/test-data/TC-011.tsx",
+      "expected_findings": [],
+      "expected_score_range": [10.0, 10.0],
+      "rationale": "Well-structured component with union variants, slot composition, and separated concerns."
+    }
+  ]
+}
+

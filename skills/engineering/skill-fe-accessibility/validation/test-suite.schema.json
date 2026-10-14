@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FrontendAccessibilityTestSuite",
+  "type": "object",
+  "required": ["$schema", "skill", "version", "test_cases"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "skill": { "type": "string", "enum": ["skill-fe-accessibility"] },
+    "version": { "type": "string" },
+    "test_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "target_file", "expected_findings", "expected_score_range", "rationale"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^TC-[0-9]{3}$" },
+          "name": { "type": "string" },
+          "target_file": { "type": "string" },
+          "expected_findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["rule_id", "severity", "line_range"],
+              "properties": {
+                "rule_id": {
+                  "type": "string",
+                  "enum": [
+                    "FA11Y01", "FA11Y02", "FA11Y03", "FA11Y04", "FA11Y05",
+                    "FA11Y06", "FA11Y07", "FA11Y08", "FA11Y09", "FA11Y10"
+                  ]
+                },
+                "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
+                "line_range": {
+                  "type": "array",
+                  "items": { "type": "integer" },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              }
+            }
+          },
+          "expected_score_range": {
+            "type": "array",
+            "items": { "type": "number" },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "rationale": { "type": "string" }
+        }
+      }
+    }
+  }
+}
+

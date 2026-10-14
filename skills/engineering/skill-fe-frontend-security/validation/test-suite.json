@@ -1,0 +1,156 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "skill": "skill-fe-frontend-security",
+  "version": "1.0.0",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "name": "Unsanitized dangerouslySetInnerHTML Rendering",
+      "target_file": "validation/test-data/TC-001.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FSEC01",
+          "severity": "CRITICAL",
+          "line_range": [5, 12]
+        }
+      ],
+      "expected_score_range": [0.0, 4.0],
+      "rationale": "Directly injecting raw HTML into dangerouslySetInnerHTML without DOMPurify enables stored/DOM XSS."
+    },
+    {
+      "id": "TC-002",
+      "name": "Dynamic Anchor Href Allowing Javascript Pseudo-Protocol",
+      "target_file": "validation/test-data/TC-002.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FSEC02",
+          "severity": "HIGH",
+          "line_range": [5, 12]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Unvalidated target URL in anchor tag allows javascript: execution and reverse tabnabbing."
+    },
+    {
+      "id": "TC-003",
+      "name": "Hardcoded Private Stripe Secret Key in Client Code",
+      "target_file": "validation/test-data/TC-003.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FSEC03",
+          "severity": "CRITICAL",
+          "line_range": [3, 16]
+        }
+      ],
+      "expected_score_range": [0.0, 4.0],
+      "rationale": "Bundling backend private API secret into frontend static assets leaks full merchant privileges."
+    },
+    {
+      "id": "TC-004",
+      "name": "Auth Token Exposed in URL Query Parameters",
+      "target_file": "validation/test-data/TC-004.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FSEC04",
+          "severity": "HIGH",
+          "line_range": [3, 8]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Appending access token to URL leaks credentials through Referer headers and browser history."
+    },
+    {
+      "id": "TC-005",
+      "name": "Client-Side Multi-Tenant Data Filtering",
+      "target_file": "validation/test-data/TC-005.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FSEC05",
+          "severity": "HIGH",
+          "line_range": [7, 16]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Fetching all tenant data and filtering client-side allows unauthorized users to inspect all records."
+    },
+    {
+      "id": "TC-006",
+      "name": "Cookie Mutation Request Missing CSRF Protection",
+      "target_file": "validation/test-data/TC-006.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FSEC06",
+          "severity": "HIGH",
+          "line_range": [3, 14]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "State-changing POST request with ambient cookies lacks anti-CSRF token headers."
+    },
+    {
+      "id": "TC-007",
+      "name": "PostMessage Listener Missing Origin Verification",
+      "target_file": "validation/test-data/TC-007.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FSEC07",
+          "severity": "HIGH",
+          "line_range": [3, 12]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Handling window message events without origin checks allows malicious iframe injection."
+    },
+    {
+      "id": "TC-008",
+      "name": "Dynamic Script Injection from Untrusted URL",
+      "target_file": "validation/test-data/TC-008.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FSEC08",
+          "severity": "HIGH",
+          "line_range": [3, 10]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Dynamically inserting script element from untrusted source enables remote code execution."
+    },
+    {
+      "id": "TC-009",
+      "name": "Plaintext Payment Card Details in LocalStorage",
+      "target_file": "validation/test-data/TC-009.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FSEC09",
+          "severity": "MEDIUM",
+          "line_range": [3, 8]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Persisting payment card and CVV details in localStorage violates PCI-DSS and exposes PII."
+    },
+    {
+      "id": "TC-010",
+      "name": "Debug Privilege Escalation Backdoor on Window",
+      "target_file": "validation/test-data/TC-010.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FSEC10",
+          "severity": "MEDIUM",
+          "line_range": [9, 15]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Exposing global window debug backdoor allows client-side privilege tampering in production."
+    },
+    {
+      "id": "TC-011",
+      "name": "Compliant Frontend Security Reference Implementation",
+      "target_file": "validation/test-data/TC-011.tsx",
+      "expected_findings": [],
+      "expected_score_range": [10.0, 10.0],
+      "rationale": "Clean implementation using DOMPurify, URL protocol validation, and strict postMessage origin checks."
+    }
+  ]
+}
+

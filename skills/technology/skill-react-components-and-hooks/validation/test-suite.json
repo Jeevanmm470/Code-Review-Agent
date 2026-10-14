@@ -1,0 +1,144 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-react-components-and-hooks",
+  "version": "1.0.0",
+  "description": "Validation test suite for React Components and Hooks Technology Skill rule detection and safe counterpart patterns.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of conditional hook execution after early return violating Rules of Hooks.",
+      "category": "hooks-correctness",
+      "technology": "React Hooks",
+      "inputFile": "validation/test-data/TC-001-hooks-conditional-execution.tsx",
+      "targetSymbol": "ConditionalHooksViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "REACT03",
+            "severity": "CRITICAL",
+            "confidence": "HIGH",
+            "evidenceContains": ["useState", "useEffect", "if (!user)"]
+          }
+        ],
+        "notes": "useState and useEffect are called after an early return statement."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeTopLevelHooksPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "All hooks are called unconditionally at the top level of the component."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of missing event listener cleanup in useEffect lifecycle.",
+      "category": "effects-and-lifecycle",
+      "technology": "React Lifecycle",
+      "inputFile": "validation/test-data/TC-002-lifecycle-missing-cleanup.tsx",
+      "targetSymbol": "MissingEffectCleanupViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "REACT06",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["addEventListener('scroll'", "useEffect"]
+          }
+        ],
+        "notes": "Window scroll event listener added without returning teardown removeEventListener function."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeEffectCleanupPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "useEffect returns cleanup function removing the scroll listener."
+        }
+      }
+    },
+    {
+      "id": "TC-003",
+      "description": "Verify detection of array index key on dynamic and mutable collection list.",
+      "category": "reconciliation",
+      "technology": "React Reconciliation",
+      "inputFile": "validation/test-data/TC-003-reconciliation-index-key.tsx",
+      "targetSymbol": "IndexKeyMutableListViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "REACT08",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["key={index}", "onDelete"]
+          }
+        ],
+        "notes": "Mutable list with delete operations uses array index as key."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeEntityKeyPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "List uses unique entity ID (todo.id) as key."
+        }
+      }
+    },
+    {
+      "id": "TC-004",
+      "description": "Verify detection of uncancelled asynchronous fetch in useEffect causing race conditions.",
+      "category": "effects-and-lifecycle",
+      "technology": "React Hooks",
+      "inputFile": "validation/test-data/TC-004-lifecycle-async-race-condition.tsx",
+      "targetSymbol": "AsyncFetchRaceConditionViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "REACT06",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["fetch(`/api/users/${userId}`)", "setProfile"]
+          }
+        ],
+        "notes": "Asynchronous fetch in useEffect lacks AbortController or active flag."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeAbortControllerPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Fetch request binds to AbortController signal and aborts on cleanup."
+        }
+      }
+    },
+    {
+      "id": "TC-005",
+      "description": "Verify detection of split-brain controlled/uncontrolled state mismatch in component props.",
+      "category": "component-design",
+      "technology": "React Component Architecture",
+      "inputFile": "validation/test-data/TC-005-component-controlled-state-mismatch.tsx",
+      "targetSymbol": "ControlledStateMismatchViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "REACT02",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["useState(value || '')", "SearchInputProps"]
+          }
+        ],
+        "notes": "Component mirrors value prop into local state once on mount, ignoring future prop updates."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeControlledPropsPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Component acts as a purely controlled component using value prop directly."
+        }
+      }
+    }
+  ]
+}
+

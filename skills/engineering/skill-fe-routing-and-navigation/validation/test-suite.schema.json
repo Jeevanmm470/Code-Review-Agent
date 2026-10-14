@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FrontendRoutingAndNavigationTestSuite",
+  "type": "object",
+  "required": ["skill", "version", "testCases"],
+  "properties": {
+    "skill": {
+      "type": "string",
+      "const": "skill-fe-routing-and-navigation"
+    },
+    "version": {
+      "type": "string"
+    },
+    "testCases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "file",
+          "expectedRules",
+          "expectedScore",
+          "severity",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^TC-[0-9]{3}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "expectedRules": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "FRN01",
+                "FRN02",
+                "FRN03",
+                "FRN04",
+                "FRN05",
+                "FRN06",
+                "FRN07",
+                "FRN08",
+                "FRN09",
+                "FRN10"
+              ]
+            }
+          },
+          "expectedScore": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 10.0
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["CLEAN", "LOW", "MEDIUM", "HIGH", "CRITICAL"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["ruleId", "lineRange", "message"],
+              "properties": {
+                "ruleId": {
+                  "type": "string",
+                  "enum": [
+                    "FRN01",
+                    "FRN02",
+                    "FRN03",
+                    "FRN04",
+                    "FRN05",
+                    "FRN06",
+                    "FRN07",
+                    "FRN08",
+                    "FRN09",
+                    "FRN10"
+                  ]
+                },
+                "lineRange": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

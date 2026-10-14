@@ -1,0 +1,144 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-react-security-and-accessibility",
+  "version": "1.0.0",
+  "description": "Validation test suite for React Security and Accessibility Technology Skill rule detection and safe counterpart patterns.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of unsanitized HTML rendered directly into dangerouslySetInnerHTML risking XSS.",
+      "category": "react-security-xss",
+      "technology": "React Security",
+      "inputFile": "validation/test-data/TC-001-security-dangerously-set-inner-html.tsx",
+      "targetSymbol": "UnsanitizedHtmlInjectionViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RSA01",
+            "severity": "CRITICAL",
+            "confidence": "HIGH",
+            "evidenceContains": ["dangerouslySetInnerHTML={{ __html: userMarkdown }}"]
+          }
+        ],
+        "notes": "dangerouslySetInnerHTML renders unescaped user-supplied markup without DOMPurify sanitization."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeSanitizedHtmlPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Markup is pre-processed with DOMPurify.sanitize before passing to dangerouslySetInnerHTML."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of unvalidated user URL rendered into href allowing executable javascript: protocol.",
+      "category": "react-security-urls",
+      "technology": "React Security",
+      "inputFile": "validation/test-data/TC-002-security-unsafe-javascript-url.tsx",
+      "targetSymbol": "UnsafeJavascriptUrlViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RSA02",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["<a href={destinationUrl}"]
+          }
+        ],
+        "notes": "Link href receives unvalidated URL parameter capable of executing javascript: scheme."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeValidatedUrlPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "URL protocol is verified against safe whitelist before rendering."
+        }
+      }
+    },
+    {
+      "id": "TC-003",
+      "description": "Verify detection of non-interactive div element with onClick handler lacking keyboard accessibility.",
+      "category": "react-a11y-semantics",
+      "technology": "React Accessibility",
+      "inputFile": "validation/test-data/TC-003-a11y-non-interactive-element-click.tsx",
+      "targetSymbol": "NonInteractiveElementClickViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RSA06",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["<div className=\"card-item\" onClick={onSelect}>"]
+          }
+        ],
+        "notes": "Click handler attached to div element without role, tabIndex, or keyboard event handlers."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeSemanticButtonPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Interactive element uses native button with native keyboard focus and activation."
+        }
+      }
+    },
+    {
+      "id": "TC-004",
+      "description": "Verify detection of icon-only button missing programmatic accessible name via aria-label.",
+      "category": "react-a11y-naming",
+      "technology": "React Accessibility",
+      "inputFile": "validation/test-data/TC-004-a11y-missing-accessible-name-icon-button.tsx",
+      "targetSymbol": "MissingAccessibleNameIconButtonViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RSA07",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["<button type=\"button\" onClick={onClose}>", "<CloseIcon />"]
+          }
+        ],
+        "notes": "Button contains only SVG icon without visible text or aria-label attribute."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeLabeledIconButtonPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Button has explicit aria-label='Close dialog'."
+        }
+      }
+    },
+    {
+      "id": "TC-005",
+      "description": "Verify detection of dynamic form validation error message unlinked from input field.",
+      "category": "react-a11y-forms",
+      "technology": "React Accessibility",
+      "inputFile": "validation/test-data/TC-005-a11y-unlinked-form-error-message.tsx",
+      "targetSymbol": "UnlinkedFormErrorMessageViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "RSA10",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["<input type=\"email\" />", "{error && <span className=\"error-text\">{error}</span>}"]
+          }
+        ],
+        "notes": "Validation error text is rendered in DOM without aria-describedby or aria-invalid linkage."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeLinkedFormErrorPattern",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Input is linked to error via useId and aria-describedby, with aria-invalid flag."
+        }
+      }
+    }
+  ]
+}
+

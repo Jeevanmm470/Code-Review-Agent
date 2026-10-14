@@ -1,0 +1,156 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "skill": "skill-fe-api-integration",
+  "version": "1.0.0",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "name": "Unencoded Query Parameter String Concatenation",
+      "target_file": "validation/test-data/TC-001.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FAI01",
+          "severity": "HIGH",
+          "line_range": [8, 13]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Direct query string interpolation without URI encoding breaks on special characters."
+    },
+    {
+      "id": "TC-002",
+      "name": "Unvalidated Nested Response Access",
+      "target_file": "validation/test-data/TC-002.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FAI02",
+          "severity": "HIGH",
+          "line_range": [13, 25]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Directly traversing deeply nested properties without optional chaining throws runtime TypeErrors."
+    },
+    {
+      "id": "TC-003",
+      "name": "Async Typeahead Race Condition Without Request Sequence Tracking",
+      "target_file": "validation/test-data/TC-003.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FAI03",
+          "severity": "HIGH",
+          "line_range": [6, 11]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Asynchronous response ordering differences allow stale responses to overwrite newer user input."
+    },
+    {
+      "id": "TC-004",
+      "name": "Calling .json() on 204 No Content Response Without Status Check",
+      "target_file": "validation/test-data/TC-004.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FAI04",
+          "severity": "HIGH",
+          "line_range": [1, 6]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Calling response.json() on 204 No Content throws JSON parse error; missing !response.ok validation."
+    },
+    {
+      "id": "TC-005",
+      "name": "Concurrent 401 Interceptor Token Refresh Deadlock",
+      "target_file": "validation/test-data/TC-005.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FAI05",
+          "severity": "CRITICAL",
+          "line_range": [6, 16]
+        }
+      ],
+      "expected_score_range": [2.0, 4.0],
+      "rationale": "Concurrent 401 interceptors trigger parallel refresh calls without mutex locking, invalidating tokens."
+    },
+    {
+      "id": "TC-006",
+      "name": "Duplicate POST Mutation on Double Click",
+      "target_file": "validation/test-data/TC-006.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FAI06",
+          "severity": "HIGH",
+          "line_range": [6, 13]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Missing loading/disabled state allows duplicate checkout order creation."
+    },
+    {
+      "id": "TC-007",
+      "name": "Advancing Pagination Index Before Request Confirmation",
+      "target_file": "validation/test-data/TC-007.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FAI07",
+          "severity": "MEDIUM",
+          "line_range": [7, 13]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Optimistically incrementing page number causes skipped pages when fetch fails."
+    },
+    {
+      "id": "TC-008",
+      "name": "Missing AbortController Cleanup in useEffect",
+      "target_file": "validation/test-data/TC-008.tsx",
+      "expected_findings": [
+        {
+          "rule_id": "FAI08",
+          "severity": "MEDIUM",
+          "line_range": [6, 12]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Unmounted component attempts state updates on pending fetch completion."
+    },
+    {
+      "id": "TC-009",
+      "name": "Incomplete React Query Cache Key",
+      "target_file": "validation/test-data/TC-009.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FAI09",
+          "severity": "HIGH",
+          "line_range": [4, 9]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Query key omits category/page parameters, serving stale cache data across filter changes."
+    },
+    {
+      "id": "TC-010",
+      "name": "Mutating Shared Axios Default Headers in Tenant Configuration",
+      "target_file": "validation/test-data/TC-010.ts",
+      "expected_findings": [
+        {
+          "rule_id": "FAI10",
+          "severity": "HIGH",
+          "line_range": [3, 7]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Mutating shared axios defaults in-place creates cross-tenant header pollution."
+    },
+    {
+      "id": "TC-011",
+      "name": "Clean Baseline - Robust API Integration with AbortController and Ok Status Checks",
+      "target_file": "validation/test-data/TC-011.tsx",
+      "expected_findings": [],
+      "expected_score_range": [10.0, 10.0],
+      "rationale": "Proper URL parameter encoding, response.ok check, 204 handling, and AbortController cleanup."
+    }
+  ]
+}
+

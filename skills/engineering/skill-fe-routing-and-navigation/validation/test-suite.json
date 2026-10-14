@@ -1,0 +1,178 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "skill": "skill-fe-routing-and-navigation",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "name": "Route Definitions & Precedence Conflict",
+      "file": "test-data/TC-001.tsx",
+      "expectedRules": ["FRN01"],
+      "expectedScore": 6.0,
+      "severity": "HIGH",
+      "description": "Catch-all wildcard route declared before static and dynamic routes shadowing all downstream paths.",
+      "findings": [
+        {
+          "ruleId": "FRN01",
+          "lineRange": "10-14",
+          "message": "Catch-all route '*' declared before specific '/users/:id' and '/' routes will shadow and prevent downstream route matching."
+        }
+      ]
+    },
+    {
+      "id": "TC-002",
+      "name": "Unencoded Dynamic Param in Target URL",
+      "file": "test-data/TC-002.tsx",
+      "expectedRules": ["FRN02"],
+      "expectedScore": 7.5,
+      "severity": "HIGH",
+      "description": "Navigation target path constructed with unencoded string interpolation.",
+      "findings": [
+        {
+          "ruleId": "FRN02",
+          "lineRange": "10-12",
+          "message": "Dynamic parameter 'docPath' interpolated directly into URL path without encodeURIComponent."
+        }
+      ]
+    },
+    {
+      "id": "TC-003",
+      "name": "Missing Route Param in Lifecycle Effect",
+      "file": "test-data/TC-003.tsx",
+      "expectedRules": ["FRN03"],
+      "expectedScore": 7.5,
+      "severity": "HIGH",
+      "description": "Component fails to observe route param updates, causing stale data when navigating between products.",
+      "findings": [
+        {
+          "ruleId": "FRN03",
+          "lineRange": "10-15",
+          "message": "Component data fetch effect relies on 'productId' but passes empty dependency array []."
+        }
+      ]
+    },
+    {
+      "id": "TC-004",
+      "name": "Query Parameters Wiped During Navigation",
+      "file": "test-data/TC-004.tsx",
+      "expectedRules": ["FRN04"],
+      "expectedScore": 8.5,
+      "severity": "MEDIUM",
+      "description": "Updating pagination parameter completely overwrites existing search params object.",
+      "findings": [
+        {
+          "ruleId": "FRN04",
+          "lineRange": "9-11",
+          "message": "Setting search params with { page } without preserving existing search filters."
+        }
+      ]
+    },
+    {
+      "id": "TC-005",
+      "name": "History Stack Spam on Live Keystrokes",
+      "file": "test-data/TC-005.tsx",
+      "expectedRules": ["FRN05"],
+      "expectedScore": 8.5,
+      "severity": "MEDIUM",
+      "description": "Live search input triggers history.push on every keystroke breaking back button navigation.",
+      "findings": [
+        {
+          "ruleId": "FRN05",
+          "lineRange": "9-12",
+          "message": "Live input change invokes push navigation instead of replace navigation."
+        }
+      ]
+    },
+    {
+      "id": "TC-006",
+      "name": "Direct URL / Deep Link Crash via Location State",
+      "file": "test-data/TC-006.tsx",
+      "expectedRules": ["FRN06"],
+      "expectedScore": 7.0,
+      "severity": "HIGH",
+      "description": "Component directly reads location.state without fallback, throwing runtime error on page refresh.",
+      "findings": [
+        {
+          "ruleId": "FRN06",
+          "lineRange": "7-9",
+          "message": "Direct access of 'location.state.order' without null checking or URL-based entity recovery fetch."
+        }
+      ]
+    },
+    {
+      "id": "TC-007",
+      "name": "Auth Guard Premature Child Route Render",
+      "file": "test-data/TC-007.tsx",
+      "expectedRules": ["FRN07"],
+      "expectedScore": 5.5,
+      "severity": "CRITICAL",
+      "description": "Protected route guard renders Outlet while session loading is pending.",
+      "findings": [
+        {
+          "ruleId": "FRN07",
+          "lineRange": "12-18",
+          "message": "Auth guard renders Outlet when auth.isLoading is true, leaking protected views before authentication resolves."
+        }
+      ]
+    },
+    {
+      "id": "TC-008",
+      "name": "Missing Outlet in Parent Layout",
+      "file": "test-data/TC-008.tsx",
+      "expectedRules": ["FRN08"],
+      "expectedScore": 7.0,
+      "severity": "HIGH",
+      "description": "Parent layout configuration registers child routes but omits Outlet in layout JSX.",
+      "findings": [
+        {
+          "ruleId": "FRN08",
+          "lineRange": "11-15",
+          "message": "Layout component omits '<Outlet />', preventing nested child routes from rendering."
+        }
+      ]
+    },
+    {
+      "id": "TC-009",
+      "name": "Uncancelled Fetch on Route Change Race Condition",
+      "file": "test-data/TC-009.tsx",
+      "expectedRules": ["FRN09"],
+      "expectedScore": 7.5,
+      "severity": "HIGH",
+      "description": "Route data fetch effect lacks AbortController or active flag, allowing stale responses to overwrite newer data.",
+      "findings": [
+        {
+          "ruleId": "FRN09",
+          "lineRange": "10-16",
+          "message": "Route param data fetch lacks cancellation/abort mechanism, risking out-of-order race conditions."
+        }
+      ]
+    },
+    {
+      "id": "TC-010",
+      "name": "Missing 404 Catch-All Route Fallback",
+      "file": "test-data/TC-010.tsx",
+      "expectedRules": ["FRN10"],
+      "expectedScore": 8.5,
+      "severity": "MEDIUM",
+      "description": "Router lacks a catch-all wildcard route, causing blank screens on unknown paths.",
+      "findings": [
+        {
+          "ruleId": "FRN10",
+          "lineRange": "8-14",
+          "message": "Router configuration missing catch-all '*' 404 route fallback."
+        }
+      ]
+    },
+    {
+      "id": "TC-011",
+      "name": "Clean Frontend Routing Implementation",
+      "file": "test-data/TC-011.tsx",
+      "expectedRules": [],
+      "expectedScore": 10.0,
+      "severity": "CLEAN",
+      "description": "Exemplary implementation featuring proper route precedence, parameter encoding, abortable loaders, outlets, and history replace.",
+      "findings": []
+    }
+  ]
+}
+
