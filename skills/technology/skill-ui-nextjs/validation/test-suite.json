@@ -1,0 +1,61 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-ui-nextjs",
+  "version": "1.0.0",
+  "description": "Validation test suite for Next.js framework skill rules (NEXT01-NEXT08)",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of unvalidated Server Actions mutating state without auth checks",
+      "category": "Server Action Security",
+      "technology": "Next.js App Router / Server Actions",
+      "inputFile": "validation/test-data/TC-001-unvalidated-server-action.jsx",
+      "targetSymbol": "UnvalidatedServerActionViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "NEXT05",
+            "severity": "HIGH",
+            "message": "Server Action executes database mutation without authentication or input schema validation."
+          }
+        ],
+        "notes": "Unvalidated Server Action allows unauthenticated state mutations."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeServerActionHandling",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Server Action validates authentication session and Zod schema before mutating state."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of mismatched router hooks inside App Router components",
+      "category": "Routing Architecture",
+      "technology": "Next.js App Router / next/navigation",
+      "inputFile": "validation/test-data/TC-002-router-hook-mismatch.jsx",
+      "targetSymbol": "RouterHookMismatchViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "NEXT01",
+            "severity": "MEDIUM",
+            "message": "Imported useRouter from next/router inside App Router component instead of next/navigation."
+          }
+        ],
+        "notes": "Importing next/router in App Router components causes runtime null router errors."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeAppRouterNavigation",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "App Router component correctly imports useRouter from next/navigation."
+        }
+      }
+    }
+  ]
+}
+
