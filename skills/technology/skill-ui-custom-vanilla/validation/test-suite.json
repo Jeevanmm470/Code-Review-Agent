@@ -1,0 +1,63 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-ui-custom-vanilla",
+  "version": "1.0.0",
+  "description": "Validation test suite for Native Vanilla JavaScript and Browser Web APIs technology skill rule detection and safe code counterpart analysis.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of unsanitized dynamic user string interpolation into innerHTML.",
+      "category": "dom-security",
+      "technology": "Vanilla JavaScript / DOM API",
+      "inputFile": "validation/test-data/TC-001-unsanitized-innerhtml.js",
+      "targetSymbol": "UnsanitizedInnerHTMLViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "VANILLA01",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["container.innerHTML = `<span>${userInput}</span>`"]
+          }
+        ],
+        "notes": "Directly interpolates unvalidated userInput variable into innerHTML string."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeTextContent",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Constructs DOM element and assigns userInput safely to textContent property."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of missing response.ok verification on fetch API calls.",
+      "category": "async-fetch",
+      "technology": "Vanilla JavaScript / Fetch API",
+      "inputFile": "validation/test-data/TC-002-ignored-fetch-status.js",
+      "targetSymbol": "IgnoredFetchStatusViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "VANILLA05",
+            "severity": "MEDIUM",
+            "confidence": "HIGH",
+            "evidenceContains": ["await response.json()"]
+          }
+        ],
+        "notes": "Parses response.json() directly without evaluating response.ok status."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeFetchStatusHandling",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Checks response.ok and throws explicit Error on HTTP failure statuses."
+        }
+      }
+    }
+  ]
+}
+
