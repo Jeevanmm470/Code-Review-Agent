@@ -1,0 +1,61 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-ui-tailwind-css",
+  "version": "1.0.0",
+  "description": "Validation test suite for Tailwind CSS technology skill rules (TW01-TW08)",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of dynamic class name interpolation breaking Tailwind scanner discovery",
+      "category": "Source Scanning & Discovery",
+      "technology": "Tailwind CSS Scanner / Purge",
+      "inputFile": "validation/test-data/TC-001-dynamic-class-interpolation.jsx",
+      "targetSymbol": "DynamicClassInterpolationViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "TW05",
+            "severity": "HIGH",
+            "message": "String interpolation constructs partial utility class names, preventing static Tailwind source discovery."
+          }
+        ],
+        "notes": "Dynamic utility string construction causes missing styles in production builds."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeStaticClassMap",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Static class map provides complete utility strings detectable by Tailwind source scanner."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of unvarianted conflicting utility classes combined without tailwind-merge",
+      "category": "Utility Class Merging",
+      "technology": "Tailwind CSS Class Precedence",
+      "inputFile": "validation/test-data/TC-002-conflicting-utility-classes.jsx",
+      "targetSymbol": "ConflictingUtilityViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "TW01",
+            "severity": "MEDIUM",
+            "message": "Conflicting base utilities combined without tailwind-merge, causing non-deterministic CSS precedence overrides."
+          }
+        ],
+        "notes": "Combining p-2 and p-4 without twMerge causes non-deterministic specificity behavior."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeTailwindMergeUsage",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "tailwind-merge correctly resolves utility class conflicts."
+        }
+      }
+    }
+  ]
+}
+

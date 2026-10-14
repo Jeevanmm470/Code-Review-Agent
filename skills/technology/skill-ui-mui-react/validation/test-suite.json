@@ -1,0 +1,42 @@
+{
+  "suite": "skill-ui-mui-react",
+  "version": "1.0.0",
+  "description": "Validation test suite for Material UI (MUI) React technology skill",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Controlled MUI TextField initialized with undefined, causing uncontrolled-to-controlled value drift warning",
+      "ruleIds": ["MUI05"],
+      "inputFile": "validation/test-data/TC-001-uncontrolled-value-drift.jsx",
+      "targetSymbol": "UncontrolledValueDriftViolation",
+      "expected": {
+        "findingsPresent": true,
+        "ruleId": "MUI05"
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeControlledInputHandling",
+        "expected": {
+          "findingsPresent": false
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Mixing legacy MUI v4/v5 Grid item props with MUI v6 Grid2 APIs causing layout rendering breakdowns",
+      "ruleIds": ["MUI04", "MUI08"],
+      "inputFile": "validation/test-data/TC-002-grid-version-mismatch.jsx",
+      "targetSymbol": "GridVersionMismatchViolation",
+      "expected": {
+        "findingsPresent": true,
+        "ruleId": "MUI04"
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeMui6GridUsage",
+        "expected": {
+          "findingsPresent": false
+        }
+      }
+    }
+  ]
+}
+

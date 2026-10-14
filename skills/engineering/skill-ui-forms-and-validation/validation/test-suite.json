@@ -1,0 +1,63 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-ui-forms-and-validation",
+  "version": "1.0.0",
+  "description": "Validation test suite for UI Forms and Validation engineering skill rule detection and safe code counterpart analysis.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of unguarded asynchronous form submission allowing duplicate API requests.",
+      "category": "submission-lifecycle",
+      "technology": "UI Form Engineering",
+      "inputFile": "validation/test-data/TC-001-unguarded-double-submit.js",
+      "targetSymbol": "UnguardedDoubleSubmitViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "FORM04",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["await api.post(\"/submit\", formData)"]
+          }
+        ],
+        "notes": "Form submission handler does not check or set pending status flag, permitting double submits."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeGuardedSubmissionLifecycle",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Form submission handler verifies isSubmitting guard and sets flag prior to API invocation."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of form input wiping upon server validation failure.",
+      "category": "error-handling",
+      "technology": "UI Form Engineering",
+      "inputFile": "validation/test-data/TC-002-form-wipe-on-error.js",
+      "targetSymbol": "FormWipeOnErrorViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "FORM01",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["formState.values = {}"]
+          }
+        ],
+        "notes": "Resets entire form values object on server error instead of preserving user inputs."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeFieldErrorMapping",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Maps server field errors while preserving current form values."
+        }
+      }
+    }
+  ]
+}
+

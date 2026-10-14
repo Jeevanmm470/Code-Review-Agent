@@ -1,0 +1,12 @@
+/* Violation: Styling bare element tag inside component stylesheet causing global leakage */
+.UnscopedGlobalTagViolation button {
+  background-color: blue;
+  padding: 10px;
+}
+
+/* Safe Counterpart: Scopes styles via component class name */
+.SafeScopedComponent .actionButton {
+  background-color: var(--color-primary);
+  padding: var(--spacing-sm);
+}
+
