@@ -1,0 +1,156 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "skill": "skill-eng-loop-and-iteration-safety",
+  "version": "1.0.0",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "name": "Non-Advancing While Loop Index",
+      "target_file": "validation/test-data/TC-001.py",
+      "expected_findings": [
+        {
+          "rule_id": "LPS01",
+          "severity": "CRITICAL",
+          "line_range": [8, 16]
+        }
+      ],
+      "expected_score_range": [0.0, 4.0],
+      "rationale": "While loop condition index is skipped on 'SKIP' branch, causing indefinite worker freeze."
+    },
+    {
+      "id": "TC-002",
+      "name": "Off-by-One Loop Boundary Index",
+      "target_file": "validation/test-data/TC-002.py",
+      "expected_findings": [
+        {
+          "rule_id": "LPS02",
+          "severity": "HIGH",
+          "line_range": [8, 16]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Range upper bound len(data) + 1 causes index out of range crash on final iteration."
+    },
+    {
+      "id": "TC-003",
+      "name": "Mutating Dictionary During Iteration",
+      "target_file": "validation/test-data/TC-003.py",
+      "expected_findings": [
+        {
+          "rule_id": "LPS03",
+          "severity": "HIGH",
+          "line_range": [7, 11]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Deleting dictionary keys directly during iteration triggers RuntimeError."
+    },
+    {
+      "id": "TC-004",
+      "name": "Pagination Loop Missing Empty Batch Termination",
+      "target_file": "validation/test-data/TC-004.py",
+      "expected_findings": [
+        {
+          "rule_id": "LPS04",
+          "severity": "HIGH",
+          "line_range": [8, 14]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Pagination loop fails to check empty response items or stagnant cursor tokens, risking infinite requests."
+    },
+    {
+      "id": "TC-005",
+      "name": "Recursive Traversal Missing Cycle Guard & Base Case",
+      "target_file": "validation/test-data/TC-005.py",
+      "expected_findings": [
+        {
+          "rule_id": "LPS05",
+          "severity": "CRITICAL",
+          "line_range": [7, 18]
+        }
+      ],
+      "expected_score_range": [0.0, 4.0],
+      "rationale": "Recursive dependency resolution lacks visited set or recursion depth ceiling, risking stack overflow."
+    },
+    {
+      "id": "TC-006",
+      "name": "Unbounded Polling Loop Without Timeout",
+      "target_file": "validation/test-data/TC-006.py",
+      "expected_findings": [
+        {
+          "rule_id": "LPS06",
+          "severity": "HIGH",
+          "line_range": [8, 17]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "While True polling loop lacks maximum attempts counter or deadline, hanging indefinitely if job stalls."
+    },
+    {
+      "id": "TC-007",
+      "name": "Async Worker Loop Swallowing Cancellation",
+      "target_file": "validation/test-data/TC-007.py",
+      "expected_findings": [
+        {
+          "rule_id": "LPS07",
+          "severity": "HIGH",
+          "line_range": [8, 19]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Catching and ignoring CancelledError prevents worker termination during shutdown."
+    },
+    {
+      "id": "TC-008",
+      "name": "In-Loop Resource Allocation Without Cleanup",
+      "target_file": "validation/test-data/TC-008.py",
+      "expected_findings": [
+        {
+          "rule_id": "LPS08",
+          "severity": "HIGH",
+          "line_range": [8, 14]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Opening unclosed file handles in loop body leads to file descriptor leakage."
+    },
+    {
+      "id": "TC-009",
+      "name": "Oscillating State Machine Convergence Failure",
+      "target_file": "validation/test-data/TC-009.py",
+      "expected_findings": [
+        {
+          "rule_id": "LPS09",
+          "severity": "MEDIUM",
+          "line_range": [8, 19]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "State machine oscillates indefinitely between PENDING and RETRY without step ceiling."
+    },
+    {
+      "id": "TC-010",
+      "name": "Missing Boundary Test Cases for Chunking Algorithm",
+      "target_file": "validation/test-data/TC-010.py",
+      "expected_findings": [
+        {
+          "rule_id": "LPS10",
+          "severity": "MEDIUM",
+          "line_range": [11, 16]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Test suite only exercises normal list, omitting empty and singleton boundary test cases."
+    },
+    {
+      "id": "TC-011",
+      "name": "Compliant Safe Iteration Reference Implementation",
+      "target_file": "validation/test-data/TC-011.py",
+      "expected_findings": [],
+      "expected_score_range": [10.0, 10.0],
+      "rationale": "Clean implementation with cycle detection, page ceilings, snapshot iteration, and boundary guards."
+    }
+  ]
+}
+

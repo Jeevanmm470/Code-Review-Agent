@@ -1,0 +1,156 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "skill": "skill-eng-resource-lifecycle",
+  "version": "1.0.0",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "name": "Missing Deterministic File Handle Disposal",
+      "target_file": "test-data/TC-001.py",
+      "expected_findings": [
+        {
+          "rule_id": "RES01",
+          "severity": "HIGH",
+          "line_range": [3, 9]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Opens file descriptor directly without 'with' block or try/finally close."
+    },
+    {
+      "id": "TC-002",
+      "name": "Exception Bypassing Manual Stream Cleanup",
+      "target_file": "test-data/TC-002.java",
+      "expected_findings": [
+        {
+          "rule_id": "RES02",
+          "severity": "HIGH",
+          "line_range": [8, 14]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "FileInputStream.close() is bypassed when parseHeader throws an exception."
+    },
+    {
+      "id": "TC-003",
+      "name": "Partial Multi-Resource Acquisition Failure Leaking First Resource",
+      "target_file": "test-data/TC-003.cs",
+      "expected_findings": [
+        {
+          "rule_id": "RES03",
+          "severity": "HIGH",
+          "line_range": [11, 23]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "FileStream is orphaned if subsequent TcpClient constructor fails."
+    },
+    {
+      "id": "TC-004",
+      "name": "Resource Disposed While Async Work Remains In-Flight",
+      "target_file": "test-data/TC-004.ts",
+      "expected_findings": [
+        {
+          "rule_id": "RES04",
+          "severity": "HIGH",
+          "line_range": [6, 14]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Releases database connection in finally while unawaited async task is actively using it."
+    },
+    {
+      "id": "TC-005",
+      "name": "Lock Acquired Without Finally Block Causing Deadlock",
+      "target_file": "test-data/TC-005.py",
+      "expected_findings": [
+        {
+          "rule_id": "RES05",
+          "severity": "CRITICAL",
+          "line_range": [10, 17]
+        }
+      ],
+      "expected_score_range": [0.0, 3.0],
+      "rationale": "Lock is acquired manually without try/finally or with statement, deadlocking on exception."
+    },
+    {
+      "id": "TC-006",
+      "name": "Re-instantiating Connection Pool / HTTP Client in Loop",
+      "target_file": "test-data/TC-006.cs",
+      "expected_findings": [
+        {
+          "rule_id": "RES06",
+          "severity": "MEDIUM",
+          "line_range": [10, 18]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Instantiates new HttpClient per iteration leading to socket exhaustion in TIME_WAIT."
+    },
+    {
+      "id": "TC-007",
+      "name": "Subprocess Abandoned Without Termination",
+      "target_file": "test-data/TC-007.py",
+      "expected_findings": [
+        {
+          "rule_id": "RES07",
+          "severity": "HIGH",
+          "line_range": [5, 15]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Spawns Popen without wait/timeout/termination, leaving zombie process on failure."
+    },
+    {
+      "id": "TC-008",
+      "name": "Leaked Temporary File on Processing Failure",
+      "target_file": "test-data/TC-008.java",
+      "expected_findings": [
+        {
+          "rule_id": "RES08",
+          "severity": "MEDIUM",
+          "line_range": [9, 18]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Creates temp file without deleteOnExit or finally deletion, leaking disk space on error."
+    },
+    {
+      "id": "TC-009",
+      "name": "Unregistered Timer Callback Preventing Garbage Collection",
+      "target_file": "test-data/TC-009.ts",
+      "expected_findings": [
+        {
+          "rule_id": "RES09",
+          "severity": "MEDIUM",
+          "line_range": [8, 17]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Registers recurring timer and event bus listener without dispose/cleanup method."
+    },
+    {
+      "id": "TC-010",
+      "name": "Test Fixture Leaking Persistent Temporary State",
+      "target_file": "test-data/TC-010.py",
+      "expected_findings": [
+        {
+          "rule_id": "RES10",
+          "severity": "LOW",
+          "line_range": [6, 12]
+        }
+      ],
+      "expected_score_range": [7.0, 8.5],
+      "rationale": "Test creates filesystem directory and file without tearDown cleanup."
+    },
+    {
+      "id": "TC-011",
+      "name": "Safe Resource Lifecycle Management with Idiomatic Scopes",
+      "target_file": "test-data/TC-011.py",
+      "expected_findings": [],
+      "expected_score_range": [9.0, 10.0],
+      "rationale": "Uses RAII and context managers to guarantee cleanup of locks and temp files."
+    }
+  ]
+}
+

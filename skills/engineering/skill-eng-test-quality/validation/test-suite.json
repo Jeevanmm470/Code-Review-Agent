@@ -1,0 +1,156 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "skill": "skill-eng-test-quality",
+  "version": "1.0.0",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "name": "Assertion-Free Smoke Test",
+      "target_file": "test-data/TC-001.py",
+      "expected_findings": [
+        {
+          "rule_id": "TST01",
+          "severity": "HIGH",
+          "line_range": [3, 7]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Executes logic with zero assertion statements, passing regardless of outcome."
+    },
+    {
+      "id": "TC-002",
+      "name": "Bug Fix Missing Regression Test",
+      "target_file": "test-data/TC-002.java",
+      "expected_findings": [
+        {
+          "rule_id": "TST02",
+          "severity": "HIGH",
+          "line_range": [8, 14]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "PR fixes negative quantity defect but lacks regression test for negative quantity."
+    },
+    {
+      "id": "TC-003",
+      "name": "Unverified Exception Test Body",
+      "target_file": "test-data/TC-003.cs",
+      "expected_findings": [
+        {
+          "rule_id": "TST03",
+          "severity": "MEDIUM",
+          "line_range": [9, 14]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Asserts exception type without verifying error message or non-mutation side effects."
+    },
+    {
+      "id": "TC-004",
+      "name": "Global State Leakage Across Tests",
+      "target_file": "test-data/TC-004.ts",
+      "expected_findings": [
+        {
+          "rule_id": "TST04",
+          "severity": "HIGH",
+          "line_range": [6, 12]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Mutates static global configuration without afterEach cleanup, polluting test suite."
+    },
+    {
+      "id": "TC-005",
+      "name": "Tautological Over-Mocking of System Under Test",
+      "target_file": "test-data/TC-005.py",
+      "expected_findings": [
+        {
+          "rule_id": "TST05",
+          "severity": "MEDIUM",
+          "line_range": [5, 11]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Mocks the service under test and tests only the mock configuration."
+    },
+    {
+      "id": "TC-006",
+      "name": "Hardcoded Thread Sleep Causing Flaky Execution",
+      "target_file": "test-data/TC-006.java",
+      "expected_findings": [
+        {
+          "rule_id": "TST06",
+          "severity": "MEDIUM",
+          "line_range": [9, 17]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Uses fixed Thread.sleep(100) instead of polling condition, causing flaky CI runs."
+    },
+    {
+      "id": "TC-007",
+      "name": "Missing Contract Boundary Integration Test",
+      "target_file": "test-data/TC-007.cs",
+      "expected_findings": [
+        {
+          "rule_id": "TST07",
+          "severity": "MEDIUM",
+          "line_range": [9, 14]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Polymorphic custom serializer has zero tests verifying roundtrip JSON compatibility."
+    },
+    {
+      "id": "TC-008",
+      "name": "Hardcoded Machine-Specific Path in Test Fixture",
+      "target_file": "test-data/TC-008.py",
+      "expected_findings": [
+        {
+          "rule_id": "TST08",
+          "severity": "LOW",
+          "line_range": [3, 8]
+        }
+      ],
+      "expected_score_range": [7.0, 8.5],
+      "rationale": "Hardcodes local Windows user directory path into test fixture."
+    },
+    {
+      "id": "TC-009",
+      "name": "Unawaited Async Promise Inside Test",
+      "target_file": "test-data/TC-009.ts",
+      "expected_findings": [
+        {
+          "rule_id": "TST09",
+          "severity": "HIGH",
+          "line_range": [8, 14]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Missing await on promise inside test body causes premature test exit and false pass."
+    },
+    {
+      "id": "TC-010",
+      "name": "High-Risk Financial Calculation With Single Trivial Test Case",
+      "target_file": "test-data/TC-010.py",
+      "expected_findings": [
+        {
+          "rule_id": "TST10",
+          "severity": "HIGH",
+          "line_range": [11, 16]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Complex tax brackets tested with single trivial case, leaving majority of logic unverified."
+    },
+    {
+      "id": "TC-011",
+      "name": "Thorough, Deterministic, and Isolated Test Case",
+      "target_file": "test-data/TC-011.py",
+      "expected_findings": [],
+      "expected_score_range": [9.0, 10.0],
+      "rationale": "Parameterized test cases with precise assertions and error verification."
+    }
+  ]
+}
+

@@ -1,0 +1,209 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-eng-error-handling-validation",
+  "version": "1.0.0",
+  "description": "Validation suite for Engineering Error Handling review skill covering all ERR01-ERR10 rules and safe patterns",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Silent error suppression with empty catch block masking failure as success",
+      "ruleIds": ["ERR01"],
+      "technology": "Python",
+      "inputFile": "validation/test-data/TC-001-error-suppression.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ERR01",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": ["pass", "PaymentError"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Broad catch Throwable masking programming bugs and JVM errors",
+      "ruleIds": ["ERR02"],
+      "technology": "Java",
+      "inputFile": "validation/test-data/TC-002-broad-catch.java",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ERR02",
+            "severity": "medium",
+            "confidence": "high",
+            "evidenceContains": ["catch (Throwable t)"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-003",
+      "description": "Destructive rethrow resetting call stack in C#",
+      "ruleIds": ["ERR03"],
+      "technology": "C#",
+      "inputFile": "validation/test-data/TC-003-destructive-rethrow.cs",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ERR03",
+            "severity": "medium",
+            "confidence": "high",
+            "evidenceContains": ["throw ex;"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-004",
+      "description": "Client validation error incorrectly mapped to HTTP 500 Internal Server Error",
+      "ruleIds": ["ERR04"],
+      "technology": "TypeScript",
+      "inputFile": "validation/test-data/TC-004-error-classification.ts",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ERR04",
+            "severity": "medium",
+            "confidence": "high",
+            "evidenceContains": ["res.status(500)"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-005",
+      "description": "Sensitive stack trace and raw SQL query leaked to API client in error response",
+      "ruleIds": ["ERR05"],
+      "technology": "Python",
+      "inputFile": "validation/test-data/TC-005-sensitive-leakage.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ERR05",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": ["traceback.format_exc()", "internalQuery"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-006",
+      "description": "Unsafe fallback returning privileged admin role upon network failure",
+      "ruleIds": ["ERR06"],
+      "technology": "Python",
+      "inputFile": "validation/test-data/TC-006-unsafe-fallback.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ERR06",
+            "severity": "critical",
+            "confidence": "high",
+            "evidenceContains": ["ROLE_ADMIN"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-007",
+      "description": "Unbounded retry loop retrying permanent client error without backoff",
+      "ruleIds": ["ERR07"],
+      "technology": "Python",
+      "inputFile": "validation/test-data/TC-007-retry-safety.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ERR07",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": ["while True:", "InvalidAccountError"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-008",
+      "description": "Floating promise with unhandled asynchronous rejection",
+      "ruleIds": ["ERR08"],
+      "technology": "TypeScript",
+      "inputFile": "validation/test-data/TC-008-async-error-propagation.ts",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ERR08",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": ["dispatchEmailAsync"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-009",
+      "description": "Swallowed error inside database transaction leaving partial mutation committed",
+      "ruleIds": ["ERR09"],
+      "technology": "Python",
+      "inputFile": "validation/test-data/TC-009-transaction-rollback.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ERR09",
+            "severity": "critical",
+            "confidence": "high",
+            "evidenceContains": ["db_session.begin()", "except Exception"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-010",
+      "description": "Worker message loop lacking top-level boundary crashing on single failure",
+      "ruleIds": ["ERR10"],
+      "technology": "Python",
+      "inputFile": "validation/test-data/TC-010-error-boundary.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ERR10",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": ["while True:", "handle_message"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-011",
+      "description": "Safe error handling pattern with specific exception catching and logging",
+      "ruleIds": [],
+      "technology": "Python",
+      "inputFile": "validation/test-data/TC-011-safe-error-handling.py",
+      "expected": {
+        "findingsPresent": false,
+        "findings": []
+      }
+    }
+  ],
+  "coverage": {
+    "rulesWithViolationTest": ["ERR01", "ERR02", "ERR03", "ERR04", "ERR05", "ERR06", "ERR07", "ERR08", "ERR09", "ERR10"],
+    "rulesWithSafeCounterpart": ["ERR01", "ERR02", "ERR03", "ERR04", "ERR05", "ERR06", "ERR07", "ERR08", "ERR09", "ERR10"],
+    "rulesWithNotApplicableCase": ["ERR01", "ERR02", "ERR03", "ERR04", "ERR05", "ERR06", "ERR07", "ERR08", "ERR09", "ERR10"],
+    "technologiesCovered": ["Python", "Java", "C#", "TypeScript"],
+    "totalTestCases": 11,
+    "violationCases": 10,
+    "safeCases": 1
+  }
+}
+

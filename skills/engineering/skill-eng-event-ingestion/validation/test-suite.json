@@ -1,0 +1,261 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-eng-event-ingestion-v1",
+  "version": "1.0.0",
+  "description": "Validation test suite for Event Ingestion and Webhook Safety skill rules EVT01-EVT10",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Webhook signature calculated on parsed/re-serialized JSON payload instead of raw bytes",
+      "ruleIds": ["EVT01"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-001.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "EVT01",
+            "severity": "critical",
+            "confidence": "high",
+            "evidenceContains": [
+              "re-encoding json",
+              "json.dumps"
+            ]
+          }
+        ],
+        "notes": "Signature verification must use raw bytes directly from request stream.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Webhook secret token accepted in query parameters and logged in plaintext",
+      "ruleIds": ["EVT02"],
+      "technology": "JavaScript",
+      "inputFile": "test-data/TC-002.js",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "EVT02",
+            "severity": "critical",
+            "confidence": "high",
+            "evidenceContains": [
+              "req.query.secret_token",
+              "console.log"
+            ]
+          }
+        ],
+        "notes": "Secrets must never be accepted via query parameters or logged.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-003",
+      "description": "Unbounded body payload buffering without content-type check or size limits",
+      "ruleIds": ["EVT03"],
+      "technology": "Java",
+      "inputFile": "test-data/TC-003.java",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "EVT03",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "byte[] rawPayload",
+              "arbitrary byte size"
+            ]
+          }
+        ],
+        "notes": "Payload size limits and strict schema validation must be enforced.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-004",
+      "description": "Non-idempotent event processing without deduplication keys or unique constraints",
+      "ruleIds": ["EVT04"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-004.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "EVT04",
+            "severity": "critical",
+            "confidence": "high",
+            "evidenceContains": [
+              "grant_user_credits",
+              "deduplication"
+            ]
+          }
+        ],
+        "notes": "Side effects must be protected by atomic event deduplication keys.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-005",
+      "description": "Synchronous heavy operations in webhook handler blocking timely HTTP acknowledgment",
+      "ruleIds": ["EVT05"],
+      "technology": "TypeScript",
+      "inputFile": "test-data/TC-005.ts",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "EVT05",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "generateFinancialReports",
+              "syncCustomerDataToCrm"
+            ]
+          }
+        ],
+        "notes": "Webhooks must acknowledge quickly and delegate heavy work asynchronously.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-006",
+      "description": "Webhook signature verified without timestamp tolerance check enabling replay attacks",
+      "ruleIds": ["EVT06"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-006.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "EVT06",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "replayed indefinitely",
+              "timestamp"
+            ]
+          }
+        ],
+        "notes": "Webhook signatures must enforce timestamp tolerances to prevent replay attacks.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-007",
+      "description": "Blind state mutation on incoming update events without sequence/version validation",
+      "ruleIds": ["EVT07"],
+      "technology": "C#",
+      "inputFile": "test-data/TC-007.cs",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "EVT07",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "order.Status = evt.NewStatus",
+              "evt.Version"
+            ]
+          }
+        ],
+        "notes": "State mutations must verify event sequence numbers or update timestamps.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-008",
+      "description": "Cross-tenant resource modification based directly on untrusted payload parameters",
+      "ruleIds": ["EVT08"],
+      "technology": "Java",
+      "inputFile": "test-data/TC-008.java",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "EVT08",
+            "severity": "critical",
+            "confidence": "high",
+            "evidenceContains": [
+              "cancelSubscription",
+              "payload.getTenantId"
+            ]
+          }
+        ],
+        "notes": "Resource actions must be verified against authenticated tenant context.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-009",
+      "description": "Outbound HTTP request to arbitrary URL provided in payload without SSRF validation",
+      "ruleIds": ["EVT09"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-009.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "EVT09",
+            "severity": "critical",
+            "confidence": "high",
+            "evidenceContains": [
+              "requests.get(media_url",
+              "SSRF"
+            ]
+          }
+        ],
+        "notes": "Payload-supplied URLs must be validated against SSRF and private IP ranges.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-010",
+      "description": "Consumer crashing on malformed payloads without error boundary or DLQ routing",
+      "ruleIds": ["EVT10"],
+      "technology": "TypeScript",
+      "inputFile": "test-data/TC-010.ts",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "EVT10",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "JSON.parse",
+              "infinite SQS retries"
+            ]
+          }
+        ],
+        "notes": "Consumers must isolate poison pills and route unprocessable messages to DLQ.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-011",
+      "description": "Compliant webhook ingestion handler with signature verification, timestamp check, and async enqueue",
+      "ruleIds": ["EVT01", "EVT02", "EVT03", "EVT05", "EVT06"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-011.py",
+      "expected": {
+        "findingsPresent": false,
+        "findings": [],
+        "notes": "Proper timing-safe HMAC check on raw bytes, timestamp drift verification, payload limit, and fast queue enqueue.",
+        "uncertaintyNote": false
+      }
+    }
+  ],
+  "coverage": {
+    "rulesWithViolationTest": ["EVT01", "EVT02", "EVT03", "EVT04", "EVT05", "EVT06", "EVT07", "EVT08", "EVT09", "EVT10"],
+    "rulesWithSafeCounterpart": ["EVT01", "EVT02", "EVT03", "EVT05", "EVT06"],
+    "rulesWithNotApplicableCase": [],
+    "technologiesCovered": ["Python", "JavaScript", "Java", "TypeScript", "C#"],
+    "totalTestCases": 11,
+    "violationCases": 10,
+    "safeCases": 1
+  }
+}
+

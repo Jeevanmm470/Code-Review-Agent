@@ -1,0 +1,261 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-eng-async-delivery-v1",
+  "version": "1.0.0",
+  "description": "Validation test suite for Async Delivery skill rules ASY01-ASY10",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "RabbitMQ basic_ack invoked before database transaction commit",
+      "ruleIds": ["ASY01"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-001.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ASY01",
+            "severity": "critical",
+            "confidence": "high",
+            "evidenceContains": [
+              "basic_ack",
+              "save_and_commit"
+            ]
+          }
+        ],
+        "notes": "Messages must be acknowledged only after database changes commit.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Non-idempotent credit mutation on queue redelivery without deduplication key",
+      "ruleIds": ["ASY02"],
+      "technology": "C#",
+      "inputFile": "test-data/TC-002.cs",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ASY02",
+            "severity": "critical",
+            "confidence": "high",
+            "evidenceContains": [
+              "AddCreditsAsync",
+              "deduplication"
+            ]
+          }
+        ],
+        "notes": "Side effects must be protected by unique message deduplication keys.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-003",
+      "description": "Immediate tight retry loop on consumer failure without exponential backoff",
+      "ruleIds": ["ASY03"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-003.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ASY03",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "while attempts",
+              "continue"
+            ]
+          }
+        ],
+        "notes": "Consumer retries must use exponential backoff and jitter.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-004",
+      "description": "Uncaught JSON parse crash blocking queue partition without DLQ",
+      "ruleIds": ["ASY04"],
+      "technology": "TypeScript",
+      "inputFile": "test-data/TC-004.ts",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ASY04",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "JSON.parse",
+              "infinite redelivery"
+            ]
+          }
+        ],
+        "notes": "Unprocessable messages must be routed to DLQ rather than crashing partitions.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-005",
+      "description": "Kafka dependent events dispatched without partition keys (out-of-order execution)",
+      "ruleIds": ["ASY05"],
+      "technology": "Java",
+      "inputFile": "test-data/TC-005.java",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ASY05",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "kafkaTemplate.send",
+              "out-of-order"
+            ]
+          }
+        ],
+        "notes": "Dependent events must supply partition keys to preserve ordering.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-006",
+      "description": "Unbounded prefetch on consumer causing OOM and downstream worker saturation",
+      "ruleIds": ["ASY06"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-006.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ASY06",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "prefetch_count=0",
+              "unbounded prefetch"
+            ]
+          }
+        ],
+        "notes": "Consumers must configure bounded prefetch and backpressure limits.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-007",
+      "description": "BackgroundService ignoring cancellation token and abruptly killing in-flight tasks",
+      "ruleIds": ["ASY07"],
+      "technology": "C#",
+      "inputFile": "test-data/TC-007.cs",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ASY07",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "PerformLongSyncOperation",
+              "stoppingToken"
+            ]
+          }
+        ],
+        "notes": "Background workers must await in-flight tasks and observe cancellation tokens.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-008",
+      "description": "Dual-write race vulnerability between DB commit and uncoordinated broker publish",
+      "ruleIds": ["ASY08"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-008.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ASY08",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "db.commit",
+              "kafka_producer.publish"
+            ]
+          }
+        ],
+        "notes": "Transactional Outbox pattern must be used for dual-write persistence.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-009",
+      "description": "Message publisher strips active distributed traceparent context",
+      "ruleIds": ["ASY09"],
+      "technology": "TypeScript",
+      "inputFile": "test-data/TC-009.ts",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ASY09",
+            "severity": "medium",
+            "confidence": "high",
+            "evidenceContains": [
+              "SendMessageCommand",
+              "correlation ID"
+            ]
+          }
+        ],
+        "notes": "Distributed tracing headers must be injected into message metadata.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-010",
+      "description": "Consumer test suite lacking idempotency duplicate delivery assertions",
+      "ruleIds": ["ASY10"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-010.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "ASY10",
+            "severity": "medium",
+            "confidence": "high",
+            "evidenceContains": [
+              "test_consumer_happy_path",
+              "idempotency"
+            ]
+          }
+        ],
+        "notes": "Async consumer test suites must include duplicate redelivery assertions.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-011",
+      "description": "Compliant message consumer with atomic deduplication, DB transaction, and post-commit ack",
+      "ruleIds": ["ASY01", "ASY02", "ASY04", "ASY09"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-011.py",
+      "expected": {
+        "findingsPresent": false,
+        "findings": [],
+        "notes": "Safe consumer with JSON try/catch DLQ fallback, inbox deduplication key check, and post-commit ack.",
+        "uncertaintyNote": false
+      }
+    }
+  ],
+  "coverage": {
+    "rulesWithViolationTest": ["ASY01", "ASY02", "ASY03", "ASY04", "ASY05", "ASY06", "ASY07", "ASY08", "ASY09", "ASY10"],
+    "rulesWithSafeCounterpart": ["ASY01", "ASY02", "ASY04", "ASY09"],
+    "rulesWithNotApplicableCase": [],
+    "technologiesCovered": ["Python", "C#", "TypeScript", "Java"],
+    "totalTestCases": 11,
+    "violationCases": 10,
+    "safeCases": 1
+  }
+}
+

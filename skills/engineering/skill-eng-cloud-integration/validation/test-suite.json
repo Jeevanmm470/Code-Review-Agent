@@ -1,0 +1,261 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-eng-cloud-integration-v1",
+  "version": "1.0.0",
+  "description": "Validation test suite for Cloud Integration skill rules CLD01-CLD10",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Hardcoded AWS access key ID and secret key in boto3 client initialization",
+      "ruleIds": ["CLD01"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-001.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "CLD01",
+            "severity": "critical",
+            "confidence": "high",
+            "evidenceContains": [
+              "aws_access_key_id",
+              "AKIAIOSFODNN7EXAMPLE"
+            ]
+          }
+        ],
+        "notes": "Hardcoded cloud credentials must be replaced with IAM / Workload Identity.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Plaintext secret retrieved from configuration files instead of Azure Key Vault",
+      "ruleIds": ["CLD02"],
+      "technology": "C#",
+      "inputFile": "test-data/TC-002.cs",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "CLD02",
+            "severity": "critical",
+            "confidence": "high",
+            "evidenceContains": [
+              "StaticAdminPassword",
+              "appsettings"
+            ]
+          }
+        ],
+        "notes": "Secrets must be retrieved dynamically from cloud secrets managers.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-003",
+      "description": "Missing network timeouts on cloud metadata and API invocations",
+      "ruleIds": ["CLD03"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-003.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "CLD03",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "requests.get",
+              "timeout"
+            ]
+          }
+        ],
+        "notes": "Explicit network timeouts must be specified for cloud API calls.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-004",
+      "description": "Instantiating cloud SDK client per request causing connection pool churn",
+      "ruleIds": ["CLD04"],
+      "technology": "Java",
+      "inputFile": "test-data/TC-004.java",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "CLD04",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "AmazonS3ClientBuilder",
+              "new SDK client"
+            ]
+          }
+        ],
+        "notes": "SDK clients should be singletons/reused across requests to maintain connection pools.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-005",
+      "description": "Cloud object listing ignores pagination continuation token causing truncation",
+      "ruleIds": ["CLD05"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-005.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "CLD05",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "list_objects_v2",
+              "NextContinuationToken"
+            ]
+          }
+        ],
+        "notes": "Multi-page cloud resources must be retrieved using paginators or continuation tokens.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-006",
+      "description": "Immediate retry loop on cloud rate limits without backoff or jitter",
+      "ruleIds": ["CLD06"],
+      "technology": "TypeScript",
+      "inputFile": "test-data/TC-006.ts",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "CLD06",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "ThrottlingException",
+              "retry loop"
+            ]
+          }
+        ],
+        "notes": "Throttled requests must back off exponentially with jitter.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-007",
+      "description": "Unbounded cloud blob buffer loading in memory instead of streaming",
+      "ruleIds": ["CLD07"],
+      "technology": "C#",
+      "inputFile": "test-data/TC-007.cs",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "CLD07",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "DownloadContentAsync",
+              "memory array buffer"
+            ]
+          }
+        ],
+        "notes": "Large cloud objects must be streamed to avoid OOM.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-008",
+      "description": "Cloud object key constructed directly from user input allowing path traversal",
+      "ruleIds": ["CLD08"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-008.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "CLD08",
+            "severity": "critical",
+            "confidence": "high",
+            "evidenceContains": [
+              "uploads/{raw_filename}",
+              "path traversal"
+            ]
+          }
+        ],
+        "notes": "Object keys derived from user input must be sanitized and scoped.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-009",
+      "description": "Excessive presigned URL expiration window on sensitive export files",
+      "ruleIds": ["CLD09"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-009.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "CLD09",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "generate_presigned_url",
+              "ExpiresIn=2592000"
+            ]
+          }
+        ],
+        "notes": "Presigned URLs and temporary resources must have tight TTL expirations.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-010",
+      "description": "Silent fallback to local dev bucket in production code",
+      "ruleIds": ["CLD10"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-010.py",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "CLD10",
+            "severity": "high",
+            "confidence": "high",
+            "evidenceContains": [
+              "PROD_STORAGE_BUCKET",
+              "local-dev-mock-bucket"
+            ]
+          }
+        ],
+        "notes": "Production configuration must fail fast rather than silently falling back to dev.",
+        "uncertaintyNote": false
+      }
+    },
+    {
+      "id": "TC-011",
+      "description": "Compliant cloud integration service with IAM authentication, timeouts, paginator, and streaming",
+      "ruleIds": ["CLD01", "CLD02", "CLD03", "CLD04", "CLD05", "CLD07"],
+      "technology": "Python",
+      "inputFile": "test-data/TC-011.py",
+      "expected": {
+        "findingsPresent": false,
+        "findings": [],
+        "notes": "Safe configuration using IAM credentials, Config timeouts, singleton client, paginator, and file streaming.",
+        "uncertaintyNote": false
+      }
+    }
+  ],
+  "coverage": {
+    "rulesWithViolationTest": ["CLD01", "CLD02", "CLD03", "CLD04", "CLD05", "CLD06", "CLD07", "CLD08", "CLD09", "CLD10"],
+    "rulesWithSafeCounterpart": ["CLD01", "CLD02", "CLD03", "CLD04", "CLD05", "CLD07"],
+    "rulesWithNotApplicableCase": [],
+    "technologiesCovered": ["Python", "C#", "Java", "TypeScript"],
+    "totalTestCases": 11,
+    "violationCases": 10,
+    "safeCases": 1
+  }
+}
+

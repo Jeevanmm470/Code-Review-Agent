@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ResourceLifecycleTestSuiteSchema",
+  "type": "object",
+  "required": [
+    "skill",
+    "version",
+    "test_cases"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "skill": {
+      "type": "string",
+      "enum": [
+        "skill-eng-resource-lifecycle"
+      ]
+    },
+    "version": {
+      "type": "string"
+    },
+    "test_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "target_file",
+          "expected_findings",
+          "expected_score_range",
+          "rationale"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "target_file": {
+            "type": "string"
+          },
+          "expected_findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "rule_id",
+                "severity"
+              ],
+              "properties": {
+                "rule_id": {
+                  "type": "string",
+                  "enum": [
+                    "RES01",
+                    "RES02",
+                    "RES03",
+                    "RES04",
+                    "RES05",
+                    "RES06",
+                    "RES07",
+                    "RES08",
+                    "RES09",
+                    "RES10"
+                  ]
+                },
+                "severity": {
+                  "type": "string",
+                  "enum": [
+                    "CRITICAL",
+                    "HIGH",
+                    "MEDIUM",
+                    "LOW"
+                  ]
+                },
+                "line_range": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              }
+            }
+          },
+          "expected_score_range": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "rationale": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
+

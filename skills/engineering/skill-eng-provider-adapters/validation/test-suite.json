@@ -1,0 +1,156 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "skill": "skill-eng-provider-adapters",
+  "version": "1.0.0",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "name": "SDK Type Leakage Across Domain Boundary",
+      "target_file": "test-data/TC-001.py",
+      "expected_findings": [
+        {
+          "rule_id": "ADP01",
+          "severity": "HIGH",
+          "line_range": [3, 11]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Directly references PyGithub SDK type PullRequest in domain method signature."
+    },
+    {
+      "id": "TC-002",
+      "name": "Inconsistent Canonical Status Mapping",
+      "target_file": "test-data/TC-002.cs",
+      "expected_findings": [
+        {
+          "rule_id": "ADP02",
+          "severity": "HIGH",
+          "line_range": [11, 21]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Maps GitLab opened state to Closed instead of Open enum value."
+    },
+    {
+      "id": "TC-003",
+      "name": "Silent Dummy Success on Unsupported Capability",
+      "target_file": "test-data/TC-003.java",
+      "expected_findings": [
+        {
+          "rule_id": "ADP03",
+          "severity": "MEDIUM",
+          "line_range": [9, 13]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Silently prints message rather than raising UnsupportedProviderCapabilityException."
+    },
+    {
+      "id": "TC-004",
+      "name": "Unvalidated Provider Factory Fallback",
+      "target_file": "test-data/TC-004.ts",
+      "expected_findings": [
+        {
+          "rule_id": "ADP04",
+          "severity": "HIGH",
+          "line_range": [6, 14]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Defaults to GitHubAdapter on unknown or malicious provider name without throwing."
+    },
+    {
+      "id": "TC-005",
+      "name": "Raw Provider Exception Leakage",
+      "target_file": "test-data/TC-005.py",
+      "expected_findings": [
+        {
+          "rule_id": "ADP05",
+          "severity": "MEDIUM",
+          "line_range": [9, 13]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Reraises GithubException directly across boundary without translation."
+    },
+    {
+      "id": "TC-006",
+      "name": "Mismatched Pagination Mechanism",
+      "target_file": "test-data/TC-006.py",
+      "expected_findings": [
+        {
+          "rule_id": "ADP06",
+          "severity": "MEDIUM",
+          "line_range": [6, 17]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Uses numeric page parameter on Azure DevOps continuation-token API."
+    },
+    {
+      "id": "TC-007",
+      "name": "Ignoring Provider Retry-After Header",
+      "target_file": "test-data/TC-007.ts",
+      "expected_findings": [
+        {
+          "rule_id": "ADP07",
+          "severity": "MEDIUM",
+          "line_range": [5, 11]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Uses fixed 1000ms delay instead of parsing Retry-After header on 429."
+    },
+    {
+      "id": "TC-008",
+      "name": "Cross-Tenant Credential Leakage in Singleton",
+      "target_file": "test-data/TC-008.java",
+      "expected_findings": [
+        {
+          "rule_id": "ADP08",
+          "severity": "CRITICAL",
+          "line_range": [6, 16]
+        }
+      ],
+      "expected_score_range": [0.0, 3.0],
+      "rationale": "Mutates instance token field on a Spring singleton bean."
+    },
+    {
+      "id": "TC-009",
+      "name": "Strict Enum Deserialization on Provider Payload",
+      "target_file": "test-data/TC-009.cs",
+      "expected_findings": [
+        {
+          "rule_id": "ADP09",
+          "severity": "LOW",
+          "line_range": [11, 16]
+        }
+      ],
+      "expected_score_range": [7.0, 8.5],
+      "rationale": "Strict JSON enum parsing crashes when provider introduces new event types."
+    },
+    {
+      "id": "TC-010",
+      "name": "Missing Contract Test for Secondary Provider",
+      "target_file": "test-data/TC-010.py",
+      "expected_findings": [
+        {
+          "rule_id": "ADP10",
+          "severity": "LOW",
+          "line_range": [6, 12]
+        }
+      ],
+      "expected_score_range": [7.0, 8.5],
+      "rationale": "Contract test only exercises GitHub adapter, skipping GitLab adapter."
+    },
+    {
+      "id": "TC-011",
+      "name": "Fully Compliant VCS Provider Adapter",
+      "target_file": "test-data/TC-011.py",
+      "expected_findings": [],
+      "expected_score_range": [9.0, 10.0],
+      "rationale": "Translates SDK types to canonical dataclass, encapsulates exceptions, and isolates credentials."
+    }
+  ]
+}
+

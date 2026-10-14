@@ -1,0 +1,156 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "skill": "skill-eng-backward-compatibility",
+  "version": "1.0.0",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "name": "Breaking Public API Query Parameter Renaming",
+      "target_file": "test-data/TC-001.py",
+      "expected_findings": [
+        {
+          "rule_id": "BWC01",
+          "severity": "HIGH",
+          "line_range": [6, 12]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Renamed user_id to account_id on public GET /api/v1/profile without alias support."
+    },
+    {
+      "id": "TC-002",
+      "name": "Adding Mandatory Required Field to Existing Request Payload",
+      "target_file": "test-data/TC-002.java",
+      "expected_findings": [
+        {
+          "rule_id": "BWC02",
+          "severity": "HIGH",
+          "line_range": [8, 13]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Added required billingTaxId field without default value, breaking existing clients."
+    },
+    {
+      "id": "TC-003",
+      "name": "Removing Field from Public Response DTO",
+      "target_file": "test-data/TC-003.cs",
+      "expected_findings": [
+        {
+          "rule_id": "BWC03",
+          "severity": "HIGH",
+          "line_range": [5, 11]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Removed Email property from public UserResponseDto."
+    },
+    {
+      "id": "TC-004",
+      "name": "Destructive Single-Step Database Column Drop",
+      "target_file": "test-data/TC-004.py",
+      "expected_findings": [
+        {
+          "rule_id": "BWC04",
+          "severity": "CRITICAL",
+          "line_range": [5, 9]
+        }
+      ],
+      "expected_score_range": [0.0, 3.0],
+      "rationale": "Drops active column in single migration, breaking running pods during rolling deploy."
+    },
+    {
+      "id": "TC-005",
+      "name": "Strict Deserialization Failure on Stored JSON Documents",
+      "target_file": "test-data/TC-005.java",
+      "expected_findings": [
+        {
+          "rule_id": "BWC05",
+          "severity": "HIGH",
+          "line_range": [10, 16]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Configured FAIL_ON_UNKNOWN_PROPERTIES=true on document reader, failing on schema drift."
+    },
+    {
+      "id": "TC-006",
+      "name": "Removing Field from Published Event Schema",
+      "target_file": "test-data/TC-006.ts",
+      "expected_findings": [
+        {
+          "rule_id": "BWC06",
+          "severity": "HIGH",
+          "line_range": [8, 16]
+        }
+      ],
+      "expected_score_range": [4.0, 6.0],
+      "rationale": "Omitted customerId from published event payload, breaking decoupled subscribers."
+    },
+    {
+      "id": "TC-007",
+      "name": "Removing Legacy Environment Variable Fallback",
+      "target_file": "test-data/TC-007.py",
+      "expected_findings": [
+        {
+          "rule_id": "BWC07",
+          "severity": "MEDIUM",
+          "line_range": [4, 8]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Requires DATABASE_URL without fallback to DB_HOST/DB_PORT, breaking deployments."
+    },
+    {
+      "id": "TC-008",
+      "name": "Strict Enum Parser Crashing on Unrecognized Enum Value",
+      "target_file": "test-data/TC-008.cs",
+      "expected_findings": [
+        {
+          "rule_id": "BWC08",
+          "severity": "MEDIUM",
+          "line_range": [12, 18]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Enum.Parse throws exception on unknown incoming values from upstream services."
+    },
+    {
+      "id": "TC-009",
+      "name": "Altering Semantic Error Status Code Breaking Client Handlers",
+      "target_file": "test-data/TC-009.ts",
+      "expected_findings": [
+        {
+          "rule_id": "BWC09",
+          "severity": "MEDIUM",
+          "line_range": [1, 7]
+        }
+      ],
+      "expected_score_range": [6.0, 8.0],
+      "rationale": "Altered error response from 404 to 400, breaking frontend client error routing."
+    },
+    {
+      "id": "TC-010",
+      "name": "Missing Legacy Serialization Regression Test",
+      "target_file": "test-data/TC-010.py",
+      "expected_findings": [
+        {
+          "rule_id": "BWC10",
+          "severity": "LOW",
+          "line_range": [5, 9]
+        }
+      ],
+      "expected_score_range": [7.0, 8.5],
+      "rationale": "Deleted test asserting backward compatibility with previous schema representation."
+    },
+    {
+      "id": "TC-011",
+      "name": "Backward-Compatible API and Tolerant Deserialization",
+      "target_file": "test-data/TC-011.py",
+      "expected_findings": [],
+      "expected_score_range": [9.0, 10.0],
+      "rationale": "Supports both old and new parameters with fallback and ignores extra future properties."
+    }
+  ]
+}
+
