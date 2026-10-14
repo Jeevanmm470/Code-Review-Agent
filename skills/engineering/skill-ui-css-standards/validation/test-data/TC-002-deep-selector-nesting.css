@@ -1,0 +1,10 @@
+/* Violation: Deeply nested DOM-dependent selector chain inflating specificity */
+.DeepNestingViolation .card .content .list .item a {
+  color: red !important;
+}
+
+/* Safe Counterpart: Shallow flat class selector */
+.SafeShallowSelector {
+  color: var(--color-link);
+}
+

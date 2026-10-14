@@ -1,0 +1,63 @@
+{
+  "$schema": "./test-suite.schema.json",
+  "suite": "skill-ui-css-standards",
+  "version": "1.0.0",
+  "description": "Validation test suite for UI CSS Standards engineering skill rule detection and safe code counterpart analysis.",
+  "testCases": [
+    {
+      "id": "TC-001",
+      "description": "Verify detection of unscoped bare element selectors in component stylesheets causing style leakage.",
+      "category": "css-architecture",
+      "technology": "CSS / Selectors",
+      "inputFile": "validation/test-data/TC-001-unscoped-global-selector.css",
+      "targetSymbol": "UnscopedGlobalTagViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "CSS01",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "evidenceContains": ["UnscopedGlobalTagViolation button"]
+          }
+        ],
+        "notes": "Component stylesheet styles bare <button> tag globally instead of using scoped class."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeScopedComponent",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Component uses scoped class .actionButton."
+        }
+      }
+    },
+    {
+      "id": "TC-002",
+      "description": "Verify detection of deep selector nesting and unnecessary !important usage.",
+      "category": "cascade-specificity",
+      "technology": "CSS / Cascade",
+      "inputFile": "validation/test-data/TC-002-deep-selector-nesting.css",
+      "targetSymbol": "DeepNestingViolation",
+      "expected": {
+        "findingsPresent": true,
+        "findings": [
+          {
+            "ruleId": "CSS02",
+            "severity": "MEDIUM",
+            "confidence": "HIGH",
+            "evidenceContains": [".DeepNestingViolation .card .content .list .item a", "!important"]
+          }
+        ],
+        "notes": "Selector is nested 5 levels deep and uses !important override."
+      },
+      "safeCounterpart": {
+        "targetSymbol": "SafeShallowSelector",
+        "expected": {
+          "findingsPresent": false,
+          "notes": "Uses shallow flat class selector."
+        }
+      }
+    }
+  ]
+}
+
